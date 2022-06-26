@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/menu_main"
+    android:id="@+id/my_nav">
+
+    <fragment
+        android:id="@+id/menu_main"
+        android:name="com.swat_uzb.weatherapp.ui.fragments.main.MainFragment"
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_mainFragment_to_addLocationFragment"
+            app:destination="@id/menu_add_location"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+        <action
+            android:id="@+id/action_menu_main_to_nav_search_location"
+            app:destination="@id/nav_search_location"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/menu_add_location"
+        android:name="com.swat_uzb.weatherapp.ui.fragments.add_location.AddLocationFragment"
+        android:label="@string/menu_locations"
+        tools:layout="@layout/fragment_add_location">
+        <action
+            android:id="@+id/action_addLocationFragment_to_searchLocationFragment"
+            app:destination="@id/nav_search_location"
+            app:enterAnim="@anim/from_right"
+            app:exitAnim="@anim/to_left"
+            app:popEnterAnim="@anim/from_left"
+            app:popExitAnim="@anim/to_right" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_search_location"
+        android:name="com.swat_uzb.weatherapp.ui.fragments.search_location.SearchLocationFragment"
+        android:label="@string/menu_search_locations"
+        tools:layout="@layout/fragment_search_location" />
+
+    <fragment
+        android:id="@+id/menu_settings"
+        android:name="com.swat_uzb.weatherapp.ui.fragments.settings.SettingsFragment"
+        android:label="@string/menu_settings" />
+</navigation>

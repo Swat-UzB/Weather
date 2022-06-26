@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <SwitchPreferenceCompat
+        app:key="@string/key_refresh_on_launch"
+        app:title="@string/refresh_on_launch" />
+
+    <ListPreference
+        android:defaultValue="temp_c"
+        android:entries="@array/temperature_entries"
+        android:entryValues="@array/temperature_values"
+        app:key="@string/key_temperature"
+        app:title="@string/temperature"
+        app:useSimpleSummaryProvider="true" />
+
+    <ListPreference
+        android:defaultValue="kph"
+        android:entries="@array/wind_speed_entries"
+        android:entryValues="@array/wind_speed_values"
+        app:key="@string/key_wind_speed"
+        app:title="@string/wind_speed"
+        app:useSimpleSummaryProvider="true" />
+
+    <SwitchPreferenceCompat
+        android:key="@string/key_notification"
+        app:title="@string/notification" />
+
+    <ListPreference
+        android:entries="@array/location_entries"
+        android:entryValues="@array/location_values"
+        app:key="@string/key_location"
+        app:title="@string/location"
+        app:useSimpleSummaryProvider="true" />
+
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/auto_refresh_entries"
+        android:entryValues="@array/auto_refresh_values"
+        app:key="@string/key_auto_refresh"
+        app:title="@string/auto_refresh"
+        app:useSimpleSummaryProvider="true" />
+
+</PreferenceScreen>

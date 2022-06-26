@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <dimen name="font_size_14">14sp</dimen>
+    <dimen name="font_size_16">16sp</dimen>
+    <dimen name="font_size_20">20sp</dimen>
+    <dimen name="font_size_24">24sp</dimen>
+    <dimen name="font_size_50">50sp</dimen>
+    <dimen name="font_size_64">64sp</dimen>
+    <dimen name="grid_0">0dp</dimen>
+    <dimen name="grid_2">2dp</dimen>
+    <dimen name="grid_4">4dp</dimen>
+    <dimen name="grid_8">8dp</dimen>
+    <dimen name="grid_16">16dp</dimen>
+    <dimen name="grid_24">24dp</dimen>
+    <dimen name="grid_32">32dp</dimen>
+    <dimen name="grid_48">48dp</dimen>
+    <dimen name="grid_100">100dp</dimen>
+    <dimen name="font_size_36">36sp</dimen>
+    <dimen name="card_view_corner_radius">16dp</dimen>
+    <dimen name="grid_36">36dp</dimen>
+</resources>

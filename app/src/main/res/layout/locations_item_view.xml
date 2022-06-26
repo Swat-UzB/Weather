@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="currentWeather"
+            type="com.swat_uzb.weatherapp.domain.model.CurrentUi" />
+    </data>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/locations_container"
+        style="@style/Widget.Material3.CardView.Elevated"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="@dimen/grid_4"
+        app:cardCornerRadius="@dimen/card_view_corner_radius">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/grid_16"
+            android:layout_marginVertical="@dimen/grid_8">
+
+
+            <TextView
+                android:id="@+id/locations_item_view_current_temp"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="center_vertical"
+                android:text='@{currentWeather.temp +"\u00B0"}'
+                android:textSize="@dimen/font_size_50"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/guideline2"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/locations_item_view_region"
+                tools:text="25\u00B0" />
+
+            <TextView
+                android:id="@+id/locations_item_view_feels_like_temp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{"Feels like " + currentWeather.feels_like + "\u00B0"}'
+                android:textSize="@dimen/font_size_16"
+                app:layout_constraintBottom_toTopOf="@id/locations_item_view_humidity_icon"
+                app:layout_constraintEnd_toStartOf="@id/guideline3"
+                app:layout_constraintStart_toEndOf="@id/guideline2"
+                app:layout_constraintTop_toBottomOf="@id/locations_item_view_region"
+                tools:text="Feels like 25\u00B0" />
+
+            <ImageView
+                android:id="@+id/locations_item_view_humidity_icon"
+                android:layout_width="@dimen/grid_24"
+                android:layout_height="@dimen/grid_24"
+                android:contentDescription="@string/humidity_icon_desc"
+                android:src="@drawable/ic_humidity"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="@id/locations_item_view_feels_like_temp"
+                app:layout_constraintTop_toBottomOf="@id/locations_item_view_feels_like_temp" />
+
+            <TextView
+                android:id="@+id/locations_item_view_humidity_index"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text='@{currentWeather.humidity+"%"}'
+                android:textSize="@dimen/font_size_24"
+                app:layout_constraintBottom_toBottomOf="@+id/locations_item_view_humidity_icon"
+                app:layout_constraintEnd_toEndOf="@id/locations_item_view_feels_like_temp"
+                app:layout_constraintStart_toEndOf="@+id/locations_item_view_humidity_icon"
+                app:layout_constraintTop_toTopOf="@id/locations_item_view_humidity_icon"
+                tools:text="52%" />
+
+
+            <TextView
+                android:id="@+id/locations_item_view_region"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:text="@{currentWeather.location}"
+                android:textSize="@dimen/font_size_24"
+                app:layout_constraintEnd_toStartOf="@id/guideline3"
+                app:layout_constraintStart_toStartOf="@id/locations_item_view_current_temp"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="@string/toolbar_tashkent" />
+
+            <ImageView
+                android:id="@+id/locations_item_view_current_weather_icon"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:contentDescription="@string/current_weather_desc"
+                android:load_image="@{currentWeather.icon_url}"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@id/guideline3"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:src="@drawable/ic_sunrise" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.30" />
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/guideline3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_constraintGuide_percent="0.60" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</layout>

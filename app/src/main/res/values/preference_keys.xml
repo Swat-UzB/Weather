@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="key_temperature" translatable="false">temperature</string>
+    <string name="key_wind_speed" translatable="false">wind_speed</string>
+    <string name="key_location" translatable="false">location</string>
+    <string name="key_notification" translatable="false">notification</string>
+    <string name="key_auto_refresh" translatable="false">auto_refresh</string>
+    <string name="key_refresh_on_launch" translatable="false">refresh_on_launch</string>
+    <string name="key_current_location" translatable="false">key_current_location</string>
+</resources>

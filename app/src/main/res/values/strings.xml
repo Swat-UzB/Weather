@@ -1,0 +1,105 @@
+<resources>
+    <string name="app_name">Weather App</string>
+
+    <string name="menu_locations">Locations</string>
+    <string name="menu_settings">Settings</string>
+    <string name="menu_share">Share this app</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="menu_rate">Rate this app</string>
+    <string name="toolbar_tashkent">Tashkent</string>
+    <string name="menu_search_locations">Search Locations</string>
+    <string name="menu_add_location">Add location</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_search">Search</string>
+    <string name="sunrise_text">Sunrise</string>
+    <string name="sunset_text">Sunset</string>
+    <string name="humidity_text">Humidity</string>
+    <string name="wind_text">Wind</string>
+    <string name="wind_icon_text">Wind icon</string>
+
+    <string name="temperature">Temperature</string>
+    <string name="wind_speed">Wind speed</string>
+    <string name="location">Location</string>
+    <string name="notification">Notification</string>
+    <string name="auto_refresh">Auto refresh</string>
+    <string name="refresh_on_launch">Refresh on launch</string>
+    <string name="degree_sign">%s\u00B0</string>
+    <string name="version_text">version %s</string>
+    <string name="current_weather_desc">current weather icon</string>
+    <string name="sunrise_icon_desc">Sunrise icon</string>
+    <string name="sunset_icon_desc">sunset icon</string>
+    <string name="uv_icon_desc">Uv icon</string>
+    <string name="humidity_icon_desc">Humidity icon</string>
+    <string name="moonrise_icon_desc">Moonrise icon</string>
+    <string name="moonset_icon_desc">Moonset icon</string>
+    <string name="moonset_text">Moonset</string>
+    <string name="moonrise_text">Moonrise</string>
+    <string name="uv_text">UV index</string>
+    <string name="toast_exist">Location already exist</string>
+    <string name="message_permission">You need to accept location permission to use this app</string>
+    <string name="permission_granted">Permission granted</string>
+    <string name="permission_required">We need this permission</string>
+    <string name="ok">OK</string>
+    <string name="alert_dialog_title">Weather Needs Permission</string>
+    <string name="alert_dialog_cancel">Cancel</string>
+    <string name="alert_dialog_message">"To ensure accuracy, please set location access to \"Allow all the time\" in your device settings."</string>
+    <string name="button_str_agree">Agree</string>
+    <string name="button_str_disagree">Disagree</string>
+    <string name="use_current_location_title">Use current location</string>
+    <string name="check_conn_toast_text">Check internet connection and try again</string>
+    <string name="progress_bar">progress bar</string>
+    <string name="package_text">package</string>
+    <string name="no_network_str">No network connection</string>
+    <string name="something_wrong_str">Something went wrong</string>
+    <string name="add_current_text">Add current location</string>
+
+
+    <string-array name="temperature_entries">
+        <item>\u00B0C</item>
+        <item>\u00B0F</item>
+    </string-array>
+    <string-array name="temperature_values">
+        <item>temp_c</item>
+        <item>temp_f</item>
+    </string-array>
+
+    <string-array name="wind_speed_entries">
+        <item>km/h</item>
+        <item>m/s</item>
+    </string-array>
+    <string-array name="wind_speed_values">
+        <item>kph</item>
+        <item>mps</item>
+    </string-array>
+
+    <string-array name="location_entries">
+        <item>Current location</item>
+        <item>Other location</item>
+    </string-array>
+    <string-array name="location_values">
+        <item>current_location</item>
+        <item>other_location</item>
+    </string-array>
+
+    <string-array name="auto_refresh_entries">
+        <item>Never</item>
+        <item>Every hour</item>
+        <item>Every 3 hours</item>
+        <item>Every 6 hours</item>
+        <item>Every 12 hours</item>
+        <item>Every 24 hours</item>
+    </string-array>
+    <string-array name="auto_refresh_values">
+        <item>0</item>
+        <item>1</item>
+        <item>3</item>
+        <item>6</item>
+        <item>12</item>
+        <item>24</item>
+    </string-array>
+</resources>
