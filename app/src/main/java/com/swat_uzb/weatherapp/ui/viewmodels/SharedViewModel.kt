@@ -1,10 +1,13 @@
 package com.swat_uzb.weatherapp.ui.viewmodels
 
+import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Application
+import android.content.pm.PackageManager
 import android.location.Location
-import android.util.Log
+import android.location.LocationManager
 import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -12,11 +15,8 @@ import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.swat_uzb.weatherapp.R
 import com.swat_uzb.weatherapp.domain.model.CurrentUi
-import com.swat_uzb.weatherapp.domain.usecase.FetchForecastFromWeatherApi
 import com.swat_uzb.weatherapp.domain.usecase.GetLocationsListAsFlowUseCase
 import com.swat_uzb.weatherapp.domain.usecase.GetLocationsListUseCase
-import com.swat_uzb.weatherapp.domain.usecase.SaveNewLocationUseCase
-import com.swat_uzb.weatherapp.utils.Constants.DEFAULT_LOCATION
 import com.swat_uzb.weatherapp.utils.Constants.TIME_STRING_FORMAT
 import com.swat_uzb.weatherapp.utils.SharedPreferencesHelper
 import kotlinx.coroutines.Dispatchers
@@ -32,9 +32,8 @@ import javax.inject.Singleton
 
 @Singleton
 class SharedViewModel @Inject constructor(
+    private var locationManager: LocationManager,
     private val context: Application,
-    private val fetchForecastFromWeatherApi: FetchForecastFromWeatherApi,
-    private val saveNewLocationUseCase: SaveNewLocationUseCase,
     private val getLocationsListUseCase: GetLocationsListUseCase,
     private val fusedLocationClient: FusedLocationProviderClient,
     getLocationsListAsFlowUseCase: GetLocationsListAsFlowUseCase,
@@ -54,40 +53,38 @@ class SharedViewModel @Inject constructor(
     private var _favouriteLocationId = 0L
     val favouriteLocationId get() = _favouriteLocationId
 
+    private val _addLocation = MutableSharedFlow<Location>()
+    val addLocation = _addLocation.asSharedFlow()
+
     private var _checkPermission = MutableSharedFlow<Unit>()
     val checkPermission: SharedFlow<Unit> = _checkPermission.asSharedFlow()
 
-    private var _navigateUp = MutableSharedFlow<Unit>()
-    val navigateUp: SharedFlow<Unit> = _navigateUp.asSharedFlow()
-
-
     suspend fun getLocationsList() = getLocationsListUseCase.getLocationsList()
+
+    fun isNotLocationGranted() =
+        ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        ) != PackageManager.PERMISSION_GRANTED
+
+    private fun isGpsOn() =
+        locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
+            LocationManager.NETWORK_PROVIDER
+        )
 
     fun addCurrentLocation() {
         showProgressBar()
         getLastLocation {
-            viewModelScope.launch(Dispatchers.IO) {
-                fetchForecastFromWeatherApi.fetchForecastFromWeatherApi("${it.latitude},${it.longitude}")
-                    .onSuccess { forecastData ->
-                        saveNewLocationUseCase.addNewLocation(forecastData, 1, true)
-                            .onSuccess {
-                                prefs.setCurrent(true)
-                                hideProgressBar()
-                                _navigateUp.emit(Unit)
-                            }
-                    }
-                    .onFailure {
-                        handleError(it)
-                        hideProgressBar()
-                    }
+            it.let {
+                viewModelScope.launch(Dispatchers.IO) {
+                    _addLocation.emit(it)
+                }
             }
         }
     }
-
-
-    fun getCurrentLocation() = prefs.getCurrent()
-
-    fun enableCurrentLocation() = prefs.setCurrent(false)
 
     fun showProgressBar() {
         viewModelScope.launch {
@@ -111,21 +108,11 @@ class SharedViewModel @Inject constructor(
         _favouriteLocationId = id
     }
 
-    private var _currentLocation = MutableLiveData<Location>()
-    val currentLocation: LiveData<Location>
-        get() = _currentLocation
-
-    fun setLocation(location: Location) {
-        _currentLocation.postValue(location)
-    }
-
-    fun notSetLocation() = getLocation() == DEFAULT_LOCATION
-
-    fun getOnLaunchRefresh(): LiveData<Boolean> = prefs.getRefreshOnLaunch()
-
     fun getAutoRefresh(): String = prefs.getAutoRefresh()!!
 
     fun getNotification() = prefs.getNotification()
+
+    fun getOnLaunchRefresh(): LiveData<Boolean> = prefs.isRefreshOnLaunchOn()
 
     fun getLocation(): String = prefs.getLocation()!!
 
@@ -137,6 +124,22 @@ class SharedViewModel @Inject constructor(
         }
     }
 
+    @SuppressLint("MissingPermission")
+    fun getLastLocation(onLocation: (location: Location) -> Unit) {
+        if (isNotLocationGranted() || !isGpsOn()) {
+            postCheckPermissionValue()
+            return
+        }
+
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener {
+                viewModelScope.launch {
+                    it.let(onLocation)
+                }
+            }
+
+    }
+
     @SuppressLint("SimpleDateFormat")
     fun compareDate(string: String): Boolean {
         val simpleDate = SimpleDateFormat(TIME_STRING_FORMAT)
@@ -146,16 +149,6 @@ class SharedViewModel @Inject constructor(
         calendar.add(Calendar.DAY_OF_WEEK, 1)
         val tomorrow = calendar.time
         return today.before(hourlyDate) && tomorrow.after(hourlyDate)
-    }
-
-    @SuppressLint("MissingPermission")
-    fun getLastLocation(onLocation: (location: Location) -> Unit) {
-        fusedLocationClient.lastLocation
-            .addOnSuccessListener { location: Location? ->
-                location?.let {
-                    onLocation(it)
-                }
-            }
     }
 
     fun makeToast(text: String) {
@@ -174,4 +167,15 @@ class SharedViewModel @Inject constructor(
         }
         makeToast(errorMessage)
     }
+
+    fun isCurrentLocationAdded() = prefs.getCurrent()
+
+    fun setCurrentLocationAddedValue(boolean: Boolean) = prefs.setCurrent(boolean)
+
+    fun clearLocationFromShare() = prefs.clearLocationData()
+
+    fun getIsFirstTime() = prefs.getIsFirstTime()
+
+    fun setIsFirstTime(boolean: Boolean) = prefs.setIsFistTime(boolean)
+
 }

@@ -3,7 +3,8 @@ package com.swat_uzb.weatherapp.ui.fragments.main
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import androidx.fragment.app.viewModels
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -11,10 +12,11 @@ import androidx.navigation.fragment.findNavController
 import com.swat_uzb.weatherapp.R
 import com.swat_uzb.weatherapp.databinding.FragmentMainBinding
 import com.swat_uzb.weatherapp.ui.fragments.BaseFragment
-import com.swat_uzb.weatherapp.utils.Constants.CURRENT_OTHER_LOCATION
+import com.swat_uzb.weatherapp.utils.Constants.CURRENT_LOCATION_LOCATION
 import com.swat_uzb.weatherapp.utils.hideKeyboard
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
@@ -29,22 +31,27 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     @Inject
     lateinit var dailyWeatherAdapter: DailyWeatherAdapter
 
-    private val weatherViewModel: WeatherViewModel by viewModels { viewModelFactory }
+    @Inject
+    lateinit var weatherViewModel: WeatherViewModel
 
     override fun onViewCreate() {
 
+        // set menu
+        setupMenu()
+
         checkDb()
 
+        // subscribe Ui data
         subscribeToUiData()
 
-        // set menu
-        setHasOptionsMenu(true)
 
         // swipe to refresh method
         binding.refreshLayout.setOnRefreshListener {
             sharedViewModel.showProgressBar()
             updateWeatherData()
-            binding.refreshLayout.isRefreshing = false
+            binding.refreshLayout.apply {
+                isRefreshing = false
+            }
         }
 
         // setup recyclerViews
@@ -56,7 +63,9 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     }
 
     private fun checkDb() {
+        sharedViewModel.showProgressBar()
         lifecycleScope.launch(Dispatchers.IO) {
+            sharedViewModel.hideProgressBar()
             sharedViewModel.getLocationsList().onSuccess {
                 when {
                     it.isEmpty() -> {
@@ -90,13 +99,30 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
     }
 
     private fun updateWeatherData() {
-        weatherViewModel.updateDataUi(sharedViewModel.favouriteLocationId)
-        sharedViewModel.hideProgressBar()
+        val id = sharedViewModel.favouriteLocationId
+        val isGranted =
+            when (sharedViewModel.getLocation()) {
+                CURRENT_LOCATION_LOCATION -> !sharedViewModel.isNotLocationGranted()
+                else -> false
+            }
+        lifecycleScope.launch(Dispatchers.IO) {
+            if (isGranted) {
+                delay(1500)
+                sharedViewModel.getLastLocation {
+                    weatherViewModel.updateDataUi(
+                        id,
+                        it
+                    )
+                }
+            } else {
+                weatherViewModel.updateDataUi(id, null, isGranted)
+                sharedViewModel.setCurrentLocationAddedValue(isGranted)
+            }
+            sharedViewModel.hideProgressBar()
+        }
     }
 
     private fun subscribeToUiData() {
-
-        sharedViewModel.showProgressBar()
 
         // On Launch Refresh
         with(weatherViewModel) {
@@ -125,17 +151,6 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         }
     }
 
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.main_fragment_locations_menu, menu)
-        super.onCreateOptionsMenu(menu, inflater)
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_add_location) {
-            findNavController().navigate(R.id.action_mainFragment_to_addLocationFragment)
-        }
-        return super.onOptionsItemSelected(item)
-    }
 
     private fun setUpRecyclerView() {
         // setup daily Weather forecast recyclerview
@@ -153,6 +168,25 @@ class MainFragment : BaseFragment<FragmentMainBinding>(FragmentMainBinding::infl
         }
     }
 
+    private fun setupMenu() {
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.main_fragment_locations_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.menu_add_location -> {
+                        findNavController().navigate(R.id.action_mainFragment_to_addLocationFragment)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
+
+    }
 }
 
 

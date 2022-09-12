@@ -18,10 +18,10 @@ interface CurrentWeatherDao {
     @Query("SELECT * FROM current_data WHERE current_id=:currentId")
    suspend fun loadCurrentWeather(currentId: Long): CurrentWeatherEntity
 
-    @Query("SELECT * FROM current_data ORDER BY place_id")
+    @Query("SELECT * FROM current_data ")
     fun loadAllLocationsAsFlow(): Flow<List<CurrentWeatherEntity>>
 
-    @Query("SELECT * FROM current_data ORDER BY current_id")
+    @Query("SELECT * FROM current_data ORDER BY current_location DESC")
    suspend fun loadAllLocations(): List<CurrentWeatherEntity>
 
     @Query("SELECT EXISTS(SELECT * FROM current_data WHERE latitude=:latitude AND longitude =:longitude) ")

@@ -7,6 +7,7 @@ import android.location.LocationManager
 import android.net.ConnectivityManager
 import androidx.preference.PreferenceManager
 import androidx.room.Room
+import androidx.work.WorkManager
 import com.google.android.gms.location.LocationServices
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.swat_uzb.weatherapp.BuildConfig
@@ -16,11 +17,13 @@ import com.swat_uzb.weatherapp.data.database.HourlyDataDao
 import com.swat_uzb.weatherapp.data.database.WeatherAppDatabase
 import com.swat_uzb.weatherapp.data.network.WeatherApiService
 import com.swat_uzb.weatherapp.utils.Constants.BASE_URL_WEATHER_API
+import com.swat_uzb.weatherapp.utils.Constants.KEY_VALUE_TOKEN
 import dagger.Module
 import dagger.Provides
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -45,11 +48,13 @@ object AppModule {
         addInterceptor { chain ->
             val url = chain.request().url
                 .newBuilder()
-                .addQueryParameter("key", BuildConfig.APP_ID_WEATHER_API)
+                .addQueryParameter(KEY_VALUE_TOKEN, BuildConfig.APP_ID_WEATHER_API)
                 .build()
             chain.proceed(chain.request().newBuilder().url(url).build())
         }
-    }.build()
+
+    }.connectTimeout(5, TimeUnit.SECONDS)
+        .build()
 
 
     @Singleton
@@ -103,4 +108,8 @@ object AppModule {
     @Singleton
     fun provideLocationManager(application: Application) =
         application.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+
+    @Provides
+    @Singleton
+    fun provideWorkManager(application: Application) = WorkManager.getInstance(application)
 }

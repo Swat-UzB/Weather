@@ -3,7 +3,8 @@ package com.swat_uzb.weatherapp.ui.fragments.add_location
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import androidx.fragment.app.viewModels
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -16,12 +17,9 @@ import com.swat_uzb.weatherapp.ui.fragments.BaseFragment
 import com.swat_uzb.weatherapp.utils.SwipeToDelete
 import com.swat_uzb.weatherapp.utils.hideKeyboard
 import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
 import javax.inject.Inject
-
 
 class AddLocationFragment :
     BaseFragment<FragmentAddLocationBinding>(FragmentAddLocationBinding::inflate) {
@@ -29,19 +27,32 @@ class AddLocationFragment :
     @Inject
     lateinit var locationsAdapter: LocationsAdapter
 
-    private val addLocationViewModel: AddLocationViewModel by viewModels { viewModelFactory }
+    @Inject
+    lateinit var addLocationViewModel: AddLocationViewModel
 
     override fun onViewCreate() {
-
-        sharedViewModel.showProgressBar()
-
-        checkDb()
 
         // observe LiveData CurrentWeather
         subscribeData()
 
         // set menu
-        setHasOptionsMenu(true)
+        val menuHost: MenuHost = requireActivity()
+        menuHost.addMenuProvider(object : MenuProvider {
+            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                menuInflater.inflate(R.menu.add_location_fragment_menu, menu)
+            }
+
+            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                return when (menuItem.itemId) {
+                    R.id.menu_add_location -> {
+                        // navigate to SearchLocationFragment
+                        findNavController().navigate(R.id.action_addLocationFragment_to_searchLocationFragment)
+                        true
+                    }
+                    else -> false
+                }
+            }
+        }, viewLifecycleOwner, Lifecycle.State.RESUMED)
 
         // setup recyclerView
         setUpRecyclerView()
@@ -72,24 +83,20 @@ class AddLocationFragment :
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
 
                 val itemToDelete = locationsAdapter.currentList[viewHolder.adapterPosition]
-                when {
-                    // when item id equal favouriteLocationId
-                    itemToDelete.id == sharedViewModel.favouriteLocationId -> {
-                        // set favouriteLocationId 0
-                        sharedViewModel.setFavouriteLocationId(0L)
-                    }
-                    // when item current location
-                    itemToDelete.current_location -> {
-                        // set isCurrentId value false
 
-                        sharedViewModel.enableCurrentLocation()
-                    }
+                // when item id equal favouriteLocationId
+                if (itemToDelete.id == sharedViewModel.favouriteLocationId) {
+                    // set favouriteLocationId 0
+                    sharedViewModel.setFavouriteLocationId(0L)
                 }
+                if (itemToDelete.current_location) {
+                    sharedViewModel.setCurrentLocationAddedValue(false)
+                }
+
                 // Delete Item
                 addLocationViewModel.deleteCurrent(itemToDelete.id)
             }
         }
-
 
         val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallBack)
         itemTouchHelper.attachToRecyclerView(recyclerView)
@@ -99,41 +106,16 @@ class AddLocationFragment :
         with(sharedViewModel) {
             lifecycleScope.launch {
                 allLocations.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                    .collect {
-                        locationsAdapter.submitList(it)
+                    .collect { list ->
                         hideProgressBar()
+                        if (list.isEmpty()) {
+                            sharedViewModel.clearLocationFromShare()
+                            sharedViewModel.setCurrentLocationAddedValue(false)
+                            sharedViewModel.setIsFirstTime(true)
+                            findNavController().navigate(R.id.nav_search_location)
+                        }
+                        locationsAdapter.submitList(list.sortedByDescending  { it.current_location })
                     }
-            }
-        }
-    }
-
-    override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.add_location_fragment_menu, menu)
-
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.menu_add_location) {
-            navigateToSearchFragment()
-        }
-        return super.onOptionsItemSelected(item)
-    }
-
-    private fun navigateToSearchFragment() {
-        // navigate to SearchLocationFragment
-        findNavController().navigate(R.id.action_addLocationFragment_to_searchLocationFragment)
-    }
-
-    private fun checkDb() {
-
-        // getting current locations list from Db
-        lifecycleScope.launch(Dispatchers.IO) {
-            sharedViewModel.getLocationsList().onSuccess {
-                if (it.isEmpty()) {
-                    withContext(Dispatchers.Main) {
-                        navigateToSearchFragment()
-                    }
-                }
             }
         }
     }

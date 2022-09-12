@@ -16,13 +16,6 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
-        <action
-            android:id="@+id/action_menu_main_to_nav_search_location"
-            app:destination="@id/nav_search_location"
-            app:enterAnim="@anim/from_right"
-            app:exitAnim="@anim/to_left"
-            app:popEnterAnim="@anim/from_left"
-            app:popExitAnim="@anim/to_right" />
     </fragment>
     <fragment
         android:id="@+id/menu_add_location"

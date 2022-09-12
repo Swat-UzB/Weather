@@ -15,7 +15,6 @@ class AddLocationViewModel @Inject constructor(
     fun deleteCurrent(currentId: Long) {
         viewModelScope.launch(Dispatchers.IO) {
             deleteLocationUseCase.deleteLocation(currentId)
-                .onSuccess {}
         }
     }
 }

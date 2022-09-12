@@ -4,26 +4,27 @@ import com.swat_uzb.weatherapp.data.model.mappers.toCurrentWeatherEntity
 import com.swat_uzb.weatherapp.data.model.weatherapi.current.CurrentWeatherWeatherApiModel
 import com.swat_uzb.weatherapp.data.model.weatherapi.forecast.ForecastData
 import com.swat_uzb.weatherapp.domain.WeatherRepository
+import com.swat_uzb.weatherapp.domain.model.CurrentUi
 import javax.inject.Inject
 
 class UpdateLocationDataUseCase @Inject constructor(
     private val weatherRepository: WeatherRepository
 ) {
-    suspend fun updateLocationData(currentId: Long, forecastData: ForecastData): Result<Unit> =
+    suspend fun updateLocationData(current: CurrentUi, forecastData: ForecastData): Result<Unit> =
         kotlin.runCatching {
             with(weatherRepository) {
-                deleteDailyForecast(currentId)
-                deleteHourlyData(currentId)
+                deleteDailyForecast(current.id)
+                deleteHourlyData(current.id)
                 insertCurrentData(
                     forecastData.toCurrentWeatherEntity(
                         CurrentWeatherWeatherApiModel(
                             forecastData.current,
                             forecastData.location
-                        ), id = currentId
+                        ), id = current.id,current.current_location
                     )
                 )
-                insertHourlyData(forecastData, currentId)
-                insertDailyForecast(forecastData, currentId)
+                insertHourlyData(forecastData, current.id)
+                insertDailyForecast(forecastData, current.id)
             }
         }
 }

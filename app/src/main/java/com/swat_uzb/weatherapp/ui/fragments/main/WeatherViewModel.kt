@@ -1,5 +1,7 @@
 package com.swat_uzb.weatherapp.ui.fragments.main
 
+import android.location.Location
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -19,11 +21,11 @@ import javax.inject.Singleton
 @Singleton
 class WeatherViewModel @Inject constructor(
     private val loadLocationDataUseCase: LoadLocationDataUseCase,
-    private val getLocationsListUseCase: GetLocationsListUseCase,
     private val loadDailyByCurrentIdUseCase: LoadDailyByCurrentIdUseCase,
     private val loadHourlyListByCurrentId: LoadHourlyListByCurrentIdUseCase,
+    private val getLocationsListUseCase: GetLocationsListUseCase,
     private val fetchForecastFromWeatherApi: FetchForecastFromWeatherApi,
-    private val updateLocationDataUseCase: UpdateLocationDataUseCase,
+    private val updateLocationDataUseCase: UpdateLocationDataUseCase
 ) : ViewModel() {
     private val _current = MutableLiveData<CurrentUi>()
     val current: LiveData<CurrentUi> get() = _current
@@ -48,15 +50,28 @@ class WeatherViewModel @Inject constructor(
         }
     }
 
-    fun updateDataUi(id: Long) {
+    fun updateDataUi(id: Long, location: Location?, isGranted: Boolean = true) {
         viewModelScope.launch(Dispatchers.IO) {
             getLocationsListUseCase.getLocationsList().onSuccess { it ->
                 it.map { currentUi ->
-                    fetchForecastFromWeatherApi.fetchForecastFromWeatherApi(
-                        "${currentUi.latitude}, ${currentUi.longitude}"
-                    )
+                    var currentUiNew = currentUi
+                    when {
+                        currentUi.current_location && !isGranted -> {
+                            currentUiNew = currentUi.copy(current_location = false)
+                        }
+
+                        (currentUi.current_location && location != null && isGranted) -> {
+                            currentUiNew = currentUi.copy(
+                                latitude = location.latitude,
+                                longitude = location.longitude
+                            )
+                        }
+                    }
+                    fetchForecastFromWeatherApi.fetchForecastFromWeatherApi(currentUiNew.locationToString())
                         .onSuccess { data ->
-                            updateLocationDataUseCase.updateLocationData(currentUi.id, data)
+                            updateLocationDataUseCase.updateLocationData(
+                                currentUiNew, data
+                            )
                                 .onSuccess {
                                     when (currentUi.id) {
                                         id -> loadCurrentData(id)
@@ -72,3 +87,14 @@ class WeatherViewModel @Inject constructor(
         }
     }
 }
+
+fun Any.locationToString(): String = when (this) {
+    is Location -> {
+        "${this.latitude},${this.longitude} "
+    }
+    is CurrentUi -> {
+        "${this.latitude}, ${this.longitude}"
+    }
+    else -> ""
+}
+

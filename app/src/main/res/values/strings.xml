@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Weather App</string>
+    <string name="app_name">Weather</string>
 
     <string name="menu_locations">Locations</string>
     <string name="menu_settings">Settings</string>
@@ -7,7 +7,7 @@
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
-    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_title">Weather</string>
     <string name="nav_header_subtitle">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="menu_rate">Rate this app</string>
@@ -41,7 +41,7 @@
     <string name="moonrise_text">Moonrise</string>
     <string name="uv_text">UV index</string>
     <string name="toast_exist">Location already exist</string>
-    <string name="message_permission">You need to accept location permission to use this app</string>
+    <string name="message_permission">Your current location will be collected and used to provide some of the Weather app features such as getting your local weather</string>
     <string name="permission_granted">Permission granted</string>
     <string name="permission_required">We need this permission</string>
     <string name="ok">OK</string>
@@ -57,6 +57,8 @@
     <string name="no_network_str">No network connection</string>
     <string name="something_wrong_str">Something went wrong</string>
     <string name="add_current_text">Add current location</string>
+    <string name="add_current_button_str">Add current location</string>
+    <string name="header_desc">Bukhara historical place</string>
 
 
     <string-array name="temperature_entries">

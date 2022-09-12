@@ -10,7 +10,7 @@ abstract class ActivityBuildersModule {
     // here only activity uses
     @ContributesAndroidInjector(
         modules = [
-            FragmentBuildersModule::class, ]
+            FragmentBuildersModule::class]
     )
     abstract fun contributeMainActivity(): MainActivity
 }

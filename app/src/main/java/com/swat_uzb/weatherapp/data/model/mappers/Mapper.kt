@@ -17,14 +17,12 @@ import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
-private const val UNDEFINED_ID = 0L
-private const val IS_CURRENT_DEFAULT = false
 
 
 fun ForecastData.toCurrentWeatherEntity(
     currentWeather: CurrentWeatherWeatherApiModel,
-    id: Long = UNDEFINED_ID,
-    isCurrent: Boolean = IS_CURRENT_DEFAULT
+    id: Long ,
+    isCurrent: Boolean=false
 ) =
     CurrentWeatherEntity(
         id = id,
@@ -169,7 +167,7 @@ private fun getCorrect(boolean: Boolean, case1: Int, case2: Int) =
 
 private fun getUrl(str: String): String {
     str.substring(str.indexOf("4/") + 2, str.lastIndexOf(".")).apply {
-        return "_${drop(indexOf("/") + 2)}_${take(indexOf("/"))}"
+        return "@drawable/_${drop(indexOf("/") + 2)}_${take(indexOf("/"))}"
     }
 }
 

@@ -1,5 +1,6 @@
 package com.swat_uzb.weatherapp.ui.fragments.search_location
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.swat_uzb.weatherapp.data.model.weatherapi.forecast.ForecastData
@@ -61,18 +62,18 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    fun addLocation(search: Search) {
+    fun addLocation(lat: Double, lon: Double, id: Long = 0L, current: Boolean = false) {
         viewModelScope.launch(Dispatchers.IO) {
             showProgressBar()
-            checkLocationIsExistUseCase.checkLocationIsExist(search.lat, search.lon)
+            checkLocationIsExistUseCase.checkLocationIsExist(lat, lon)
                 .onSuccess { isExist ->
                     hideProgressBar()
-                    if (isExist) {
+                    if (isExist && !current) {
                         _isExistLocation.emit(true)
                     } else {
-                        fetchForecastFromWeatherApi.fetchForecastFromWeatherApi((search.getLocation()))
+                        fetchForecastFromWeatherApi.fetchForecastFromWeatherApi("$lat,$lon")
                             .onSuccess {
-                                addNewLocation(it)
+                                addNewLocation(it, id, current)
                             }
                             .onFailure { _error.emit(it) }
                     }
@@ -80,18 +81,19 @@ class SearchViewModel @Inject constructor(
         }
     }
 
-    private fun addNewLocation(forecastData: ForecastData) {
+    private fun addNewLocation(
+        forecastData: ForecastData,
+        id: Long,
+        current: Boolean
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
-            saveNewLocationUseCase.addNewLocation(forecastData)
+            saveNewLocationUseCase.addNewLocation(forecastData, id, current)
                 .onSuccess {
                     _isExistLocation.emit(false)
                 }
         }
     }
 
-
 }
 
 fun String?.checkQuery() = this != null && this.trim().length > 2
-
-fun Search.getLocation() = "${lat},${lon}"

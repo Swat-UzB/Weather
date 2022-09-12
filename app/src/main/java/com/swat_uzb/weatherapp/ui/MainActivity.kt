@@ -1,27 +1,25 @@
 package com.swat_uzb.weatherapp.ui
 
 import android.Manifest
-import android.app.Activity
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentSender
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
-import android.content.res.Configuration
-import android.location.LocationManager
 import android.net.Uri
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
+import android.widget.Toast
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
@@ -31,35 +29,39 @@ import androidx.navigation.ui.navigateUp
 import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.preference.PreferenceManager
+import androidx.work.*
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.*
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.swat_uzb.weatherapp.R
+import com.swat_uzb.weatherapp.UpdateWeatherDataWorker
 import com.swat_uzb.weatherapp.databinding.ActivityMainBinding
 import com.swat_uzb.weatherapp.ui.viewmodels.SharedViewModel
-import com.swat_uzb.weatherapp.utils.Constants.REQUEST_CHECK_SETTINGS
+import com.swat_uzb.weatherapp.utils.Constants.CURRENT_OTHER_LOCATION
+import com.swat_uzb.weatherapp.utils.Constants.TAG_WORKER
 import com.swat_uzb.weatherapp.utils.CustomAlertDialogFragment
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.launch
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-class MainActivity : DaggerAppCompatActivity() {
-    @Inject
-    lateinit var locationManager: LocationManager
+class MainActivity : DaggerAppCompatActivity(), SharedPreferences.OnSharedPreferenceChangeListener {
+
 
     @Inject
     lateinit var fusedLocationClient: FusedLocationProviderClient
-
-    @Inject
-    lateinit var viewModelFactory: ViewModelProvider.Factory
 
     @Inject
     lateinit var firebaseAnalytics: FirebaseAnalytics
 
     @Inject
     lateinit var customAlertDialogFragment: CustomAlertDialogFragment
-    private val sharedViewModel: SharedViewModel by viewModels { viewModelFactory }
+
+    @Inject
+    lateinit var sharedViewModel: SharedViewModel
+
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
@@ -72,8 +74,10 @@ class MainActivity : DaggerAppCompatActivity() {
         //In first launch set settings default values
         PreferenceManager.setDefaultValues(this, R.xml.preference_settings, false)
 
-//        checkPermission()
-
+        window.setFlags(
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        )
         // observe current name
         subscribe()
 
@@ -87,6 +91,37 @@ class MainActivity : DaggerAppCompatActivity() {
         settingBackArrowIcon()
 
         setupDialogFragmentListener()
+
+
+    }
+
+    private fun startWorkManager(intervalTime: Long) {
+
+        val workManager = WorkManager.getInstance(this)
+        val weatherConstraints = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val updateWeatherWorkerRequest =
+            PeriodicWorkRequestBuilder<UpdateWeatherDataWorker>(intervalTime, TimeUnit.HOURS)
+                .setConstraints(weatherConstraints)
+                .setInitialDelay(15, TimeUnit.MINUTES)
+//                .addTag(TAG_WORKER)
+//                .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
+                .build()
+
+        if (intervalTime == 0L) {
+            workManager.cancelUniqueWork(TAG_WORKER)
+            Toast.makeText(this, "worker stopped", Toast.LENGTH_SHORT).show()
+        } else {
+            workManager.enqueueUniquePeriodicWork(
+                TAG_WORKER,
+                ExistingPeriodicWorkPolicy.REPLACE,
+                updateWeatherWorkerRequest
+            )
+            Toast.makeText(this, "worker started $intervalTime", Toast.LENGTH_SHORT).show()
+        }
+
     }
 
     private fun subscribe() {
@@ -107,9 +142,17 @@ class MainActivity : DaggerAppCompatActivity() {
             with(binding.appBarMain.toolbarLocationName) {
                 it?.let {
                     text = it.region
+                    Log.d("TTTT", "mainactivity addLocation ${it.current_location}")
                     if (it.current_location) {
                         setCompoundDrawablesWithIntrinsicBounds(
                             R.drawable.ic_location_on,
+                            0,
+                            0,
+                            0
+                        )
+                    } else {
+                        setCompoundDrawablesWithIntrinsicBounds(
+                            0,
                             0,
                             0,
                             0
@@ -124,7 +167,7 @@ class MainActivity : DaggerAppCompatActivity() {
                 .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
                     Log.i("TTTT", "checkPermission collect")
-                    checkPermission()
+                    enableGps()
                 }
         }
     }
@@ -135,11 +178,12 @@ class MainActivity : DaggerAppCompatActivity() {
             ContextCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED -> {
-                // when the GPS is off
-                if (isLocationEnabled()) {
-                    sharedViewModel.addCurrentLocation()
-                } else {
-                    enableGps()
+
+                // add current location
+                with(sharedViewModel) {
+                    if (!isCurrentLocationAdded()) {
+                        addCurrentLocation()
+                    }
                 }
             }
             ActivityCompat.shouldShowRequestPermissionRationale(
@@ -199,7 +243,6 @@ class MainActivity : DaggerAppCompatActivity() {
                 DialogInterface.BUTTON_POSITIVE -> {
                     goToAppSettings()
                 }
-
             }
         }
     }
@@ -219,7 +262,6 @@ class MainActivity : DaggerAppCompatActivity() {
 
             if (destination.id == R.id.menu_main) {
                 supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_menu)
-                supportActionBar?.setTitle(getString(R.string.toolbar_tashkent))
             } else {
                 supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_arrow_back)
             }
@@ -231,6 +273,7 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private fun setupToolbar() {
+
         setSupportActionBar(binding.appBarMain.toolbar)
         val drawerLayout: DrawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
@@ -238,7 +281,7 @@ class MainActivity : DaggerAppCompatActivity() {
         appBarConfiguration = AppBarConfiguration(
             setOf(
                 R.id.menu_main
-            ), drawerLayout
+            ), drawerLayout, fallbackOnNavigateUpListener = ::onSupportNavigateUp
         )
 
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -246,47 +289,79 @@ class MainActivity : DaggerAppCompatActivity() {
     }
 
     private fun getAppVersion(): String {
-        var version = ""
-        try {
-            version = packageManager.getPackageInfo(packageName, 0).versionName
+        val version: String = try {
+            packageManager.getPackageInfo(packageName, 0).versionName
         } catch (e: PackageManager.NameNotFoundException) {
-            e.printStackTrace()
+            "1.0"
         }
         return version
     }
 
-    private fun isLocationEnabled() =
-        locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(
-            LocationManager.NETWORK_PROVIDER
-        )
-
     private fun enableGps() {
-
-        val mLocationRequest = LocationRequest.create()
-            .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
-            .setInterval(10000)
-            .setFastestInterval(10000 / 2)
+        val mLocationRequest = LocationRequest.create().apply {
+            priority = Priority.PRIORITY_HIGH_ACCURACY
+            interval = 10000
+            fastestInterval = 5000
+        }
         val settingsBuilder = LocationSettingsRequest.Builder()
             .addLocationRequest(mLocationRequest)
         settingsBuilder.setAlwaysShow(true)
         val result =
             LocationServices.getSettingsClient(this).checkLocationSettings(settingsBuilder.build())
-        result.addOnSuccessListener(this) {
-            checkPermission()
-        }
-
         result.addOnFailureListener {
             if (it is ResolvableApiException) {
                 try {
-
-                    it.startResolutionForResult(this, REQUEST_CHECK_SETTINGS)
-
+                    Log.i("TTTT", "try add on failureListener")
+                    val intentSenderRequest = IntentSenderRequest.Builder(it.resolution).build()
+                    launcher.launch(intentSenderRequest)
                 } catch (sendIntentException: IntentSender.SendIntentException) {
-                    sendIntentException.printStackTrace()
+                    // ignore this error
+
                 }
+            } else {
+                if (it is ApiException && it.statusCode == LocationSettingsStatusCodes.SETTINGS_CHANGE_UNAVAILABLE) {
+                    sharedViewModel.setLocation(1)
+                }
+            }
+        }
+        result.addOnSuccessListener {
+            checkPermission()
+        }
+    }
+
+    private val launcher =
+        registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) {
+            if (it.resultCode == RESULT_OK && sharedViewModel.isNotLocationGranted()) {
+                checkPermission()
+            }
+        }
+
+    override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences?, key: String?) {
+
+        when (key) {
+            getString(R.string.key_auto_refresh) -> {
+                startWorkManager(sharedViewModel.getAutoRefresh().toLong())
+            }
+            getString(R.string.key_notification) -> {
+                Toast.makeText(
+                    this,
+                    sharedViewModel.getNotification().toString(),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
     }
 
+    override fun onStart() {
+        super.onStart()
+        PreferenceManager.getDefaultSharedPreferences(this)
+            .registerOnSharedPreferenceChangeListener(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        PreferenceManager.getDefaultSharedPreferences(this)
+            .unregisterOnSharedPreferenceChangeListener(this)
+    }
 }

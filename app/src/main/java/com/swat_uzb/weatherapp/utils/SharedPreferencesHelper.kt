@@ -7,9 +7,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.swat_uzb.weatherapp.R
 import com.swat_uzb.weatherapp.utils.Constants.DEFAULT_AUTO_REFRESH
-import com.swat_uzb.weatherapp.utils.Constants.DEFAULT_LOCATION
 import com.swat_uzb.weatherapp.utils.Constants.DEFAULT_TEMPERATURE
 import com.swat_uzb.weatherapp.utils.Constants.DEFAULT_WIND_SPEED
+import com.swat_uzb.weatherapp.utils.Constants.NOT_SET
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -21,8 +21,7 @@ class SharedPreferencesHelper @Inject constructor(
     private val onLaunchRefresh = MutableLiveData<Boolean>()
     private val editor = prefs.edit()
 
-
-    fun getRefreshOnLaunch(): LiveData<Boolean> {
+    fun isRefreshOnLaunchOn(): LiveData<Boolean> {
         onLaunchRefresh.postValue(
             prefs.getBoolean(context.getString(R.string.key_refresh_on_launch), false)
         )
@@ -48,24 +47,40 @@ class SharedPreferencesHelper @Inject constructor(
 
     fun getLocation() = prefs.getString(
         context.getString(R.string.key_location),
-        DEFAULT_LOCATION
+        NOT_SET
     )
 
-    fun setLocation(int: Int) {
+    fun setLocation(int: Int) =
         editor.putString(
             context.getString(R.string.key_location),
             context.resources.getStringArray(R.array.location_values)[int]
-        )
-        editor.apply()
+        ).apply()
+
+
+    fun clearLocationData() {
+        editor.remove(context.getString(R.string.key_location)).apply()
     }
 
+    // current location added or not
     fun getCurrent() = prefs.getBoolean(
         context.getString(R.string.key_current_location), false
     )
 
-    fun setCurrent(boolean: Boolean) {
+    fun setCurrent(boolean: Boolean) =
         editor.putBoolean(
             context.getString(R.string.key_current_location),
+            boolean
+        ).apply()
+
+
+    fun getIsFirstTime() = prefs.getBoolean(
+        context.getString(R.string.key_is_first_time), true
+    )
+
+    fun setIsFistTime(boolean: Boolean) {
+        Log.d("TTTT", "setIsFirstTime $boolean")
+        editor.putBoolean(
+            context.getString(R.string.key_is_first_time),
             boolean
         )
         editor.apply()

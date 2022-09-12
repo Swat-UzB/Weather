@@ -12,8 +12,11 @@
         android:layout_height="match_parent"
         android:alpha="0.7"
         android:background="@color/black"
+        android:clickable="true"
         android:elevation="@dimen/grid_16"
-        android:visibility="gone">
+        android:fitsSystemWindows="true"
+        android:visibility="gone"
+        android:focusable="true">
 
         <ProgressBar
             android:id="@+id/fragment_main_progressBar"
@@ -26,6 +29,7 @@
     </RelativeLayout>
 
     <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
@@ -35,7 +39,9 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"
+            android:paddingTop="@dimen/grid_32"
             app:layout_collapseMode="pin">
 
             <LinearLayout
@@ -49,8 +55,8 @@
                     android:id="@+id/toolbar_location_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    tools:text="@string/toolbar_tashkent"
-                    android:textSize="24sp" />
+                    android:textSize="24sp"
+                    tools:text="@string/toolbar_tashkent" />
 
             </LinearLayout>
         </androidx.appcompat.widget.Toolbar>

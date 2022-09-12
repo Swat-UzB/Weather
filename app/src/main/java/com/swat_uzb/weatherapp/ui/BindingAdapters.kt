@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.databinding.BindingAdapter
 import com.swat_uzb.weatherapp.utils.Constants.PACKAGE_NAME
+import java.lang.Exception
 
 
 class BindingAdapters {
@@ -25,10 +26,14 @@ class BindingAdapters {
         @JvmStatic
         fun bindLoadData(view: ImageView, url: String?) {
             url?.let {
-                val uri = "@drawable/$it"
-                val imageResource = view.resources.getIdentifier(uri, null, PACKAGE_NAME)
+                try {
+                val imageResource = view.resources.getIdentifier(url, null, PACKAGE_NAME)
                 val drawable = ContextCompat.getDrawable(view.context, imageResource)
                 view.setImageDrawable(drawable)
+
+                }catch (ex :Exception){
+
+                }
 
             }
         }
