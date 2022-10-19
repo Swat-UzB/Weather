@@ -41,7 +41,7 @@
     <string name="moonrise_text">Moonrise</string>
     <string name="uv_text">UV index</string>
     <string name="toast_exist">Location already exist</string>
-    <string name="message_permission">Your current location will be collected and used to provide some of the Weather app features such as getting your local weather</string>
+    <string name="message_permission">\u0020\u0020Your current location will be collected and used to provide some of the Weather app features such as getting your local weather</string>
     <string name="permission_granted">Permission granted</string>
     <string name="permission_required">We need this permission</string>
     <string name="ok">OK</string>
@@ -59,6 +59,9 @@
     <string name="add_current_text">Add current location</string>
     <string name="add_current_button_str">Add current location</string>
     <string name="header_desc">Bukhara historical place</string>
+    <string name="weather_notification_channel_description">Weather information</string>
+    <string name="channel_id">ChannelId</string>
+    <string name="channel_name">Weather Channel</string>
 
 
     <string-array name="temperature_entries">

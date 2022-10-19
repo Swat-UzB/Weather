@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.MenuHost
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewbinding.ViewBinding
 import com.swat_uzb.weatherapp.ui.viewmodels.SharedViewModel
 import dagger.android.support.DaggerFragment
@@ -19,7 +17,6 @@ abstract class BaseFragment<VB : ViewBinding>(
 
     private var _binding: VB? = null
     val binding get() = _binding!!
-
 
 
     @Inject

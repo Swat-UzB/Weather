@@ -2,10 +2,7 @@ package com.swat_uzb.weatherapp.ui.fragments.main
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.AsyncListDiffer
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
 import com.swat_uzb.weatherapp.databinding.HourlyWeatherItemViewBinding
 import com.swat_uzb.weatherapp.domain.model.HourlyUi
 import com.swat_uzb.weatherapp.ui.fragments.add_location.BaseDiffUtil

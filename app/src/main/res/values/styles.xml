@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+<attr name="color_main_background" format="reference|color"/>
 
     <style name="card_view_style" parent="Widget.Material3.CardView.Elevated" >
         <item name="android:layout_width">0dp</item>
@@ -11,5 +12,10 @@
         <item name="strokeColor">?attr/colorOnSecondary</item>
         <item name="strokeWidth">2dp</item>
         <item name="android:textColor">?attr/colorOnSecondary</item>
+    </style>
+
+    <style name="style_forecast">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.Material3.TitleMedium</item>
     </style>
 </resources>

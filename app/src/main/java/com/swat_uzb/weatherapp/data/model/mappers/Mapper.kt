@@ -11,18 +11,19 @@ import com.swat_uzb.weatherapp.data.model.weatherapi.forecast.Hour
 import com.swat_uzb.weatherapp.domain.model.CurrentUi
 import com.swat_uzb.weatherapp.domain.model.DailyUi
 import com.swat_uzb.weatherapp.domain.model.HourlyUi
-import com.swat_uzb.weatherapp.utils.Constants.TIME_FORMAT
+import com.swat_uzb.weatherapp.utils.Constants.TIME_CURRENT_FORMAT
 import com.swat_uzb.weatherapp.utils.Constants.TIME_STRING_FORMAT
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
 
+const val TIME_FORMAT = "yyyy-MM-dd"
 
 
 fun ForecastData.toCurrentWeatherEntity(
     currentWeather: CurrentWeatherWeatherApiModel,
-    id: Long ,
-    isCurrent: Boolean=false
+    id: Long,
+    isCurrent: Boolean = false
 ) =
     CurrentWeatherEntity(
         id = id,
@@ -175,7 +176,7 @@ private fun getUrl(str: String): String {
 private fun getCurrentDate() = SimpleDateFormat(TIME_FORMAT).format(Date())
 
 @SuppressLint("SimpleDateFormat")
-private fun getCurrentDateWithHour() = SimpleDateFormat(TIME_STRING_FORMAT).format(Date())
+private fun getCurrentDateWithHour() = SimpleDateFormat(TIME_CURRENT_FORMAT).format(Date())
 
 fun CurrentWeatherEntity.toCurrentUi(isSelsiy: Boolean, isMps: Boolean) = CurrentUi(
     id,

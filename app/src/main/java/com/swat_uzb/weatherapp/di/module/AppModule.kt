@@ -1,10 +1,12 @@
 package com.swat_uzb.weatherapp.di.module
 
 import android.app.Application
+import android.app.NotificationManager
 import android.content.Context
 import android.content.SharedPreferences
 import android.location.LocationManager
 import android.net.ConnectivityManager
+import androidx.core.content.ContextCompat
 import androidx.preference.PreferenceManager
 import androidx.room.Room
 import androidx.work.WorkManager
@@ -16,7 +18,6 @@ import com.swat_uzb.weatherapp.data.database.DailyForecastDao
 import com.swat_uzb.weatherapp.data.database.HourlyDataDao
 import com.swat_uzb.weatherapp.data.database.WeatherAppDatabase
 import com.swat_uzb.weatherapp.data.network.WeatherApiService
-import com.swat_uzb.weatherapp.utils.Constants.BASE_URL_WEATHER_API
 import com.swat_uzb.weatherapp.utils.Constants.KEY_VALUE_TOKEN
 import dagger.Module
 import dagger.Provides
@@ -33,18 +34,17 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideWeatherService(client: OkHttpClient): WeatherApiService {
+    fun provideWeatherService(): WeatherApiService {
         return Retrofit.Builder()
             .baseUrl(BASE_URL_WEATHER_API)
-            .client(client)
+            .client(provideOkHttpClient())
             .addConverterFactory(GsonConverterFactory.create())
             .build()
             .create(WeatherApiService::class.java)
     }
 
-    @Singleton
-    @Provides
-    fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder().apply {
+
+   private fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder().apply {
         addInterceptor { chain ->
             val url = chain.request().url
                 .newBuilder()
@@ -112,4 +112,13 @@ object AppModule {
     @Provides
     @Singleton
     fun provideWorkManager(application: Application) = WorkManager.getInstance(application)
+
+    @Provides
+    @Singleton
+    fun provideNotificationManager(application: Application) = ContextCompat.getSystemService(
+        application,
+        NotificationManager::class.java
+    ) as NotificationManager
+
+    private const val BASE_URL_WEATHER_API = "https://api.weatherapi.com/v1/"
 }

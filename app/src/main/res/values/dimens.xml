@@ -23,4 +23,6 @@
     <dimen name="font_size_36">36sp</dimen>
     <dimen name="card_view_corner_radius">16dp</dimen>
     <dimen name="grid_36">36dp</dimen>
+    <dimen name="grid_20">20dp</dimen>
+    <dimen name="grid_18">18dp</dimen>
 </resources>

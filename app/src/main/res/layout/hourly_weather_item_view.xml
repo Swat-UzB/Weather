@@ -15,8 +15,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/grid_4"
-        android:layout_marginVertical="@dimen/grid_2"
-        app:cardBackgroundColor="?attr/colorOnPrimary"
+        android:layout_marginVertical="@dimen/grid_8"
+        app:cardBackgroundColor="?attr/color_main_background"
         app:cardCornerRadius="@dimen/grid_16">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,11 +24,11 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:padding="@dimen/grid_8">
+            android:padding="@dimen/grid_4">
 
             <TextView
                 android:id="@+id/fragment_main_hourly_weather_time"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/grid_8"
                 android:gravity="center"
@@ -41,18 +41,20 @@
             <ImageView
                 android:id="@+id/fragment_main_hourly_weather_icon"
                 android:layout_width="@dimen/font_size_64"
-                android:layout_height="@dimen/font_size_64"
+                android:layout_height="0dp"
                 android:layout_marginVertical="@dimen/grid_2"
+                android:adjustViewBounds="true"
                 android:contentDescription="@string/current_weather_desc"
                 android:load_image="@{hourlyData.icon_url}"
                 app:layout_constraintBottom_toTopOf="@id/fragment_main_hourly_weather_temp"
+                app:layout_constraintDimensionRatio="1:1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fragment_main_hourly_weather_time" />
-
+                app:layout_constraintTop_toBottomOf="@id/fragment_main_hourly_weather_time"
+                tools:src="@drawable/_00_day"/>
             <TextView
                 android:id="@+id/fragment_main_hourly_weather_temp"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/grid_8"
                 android:gravity="center"

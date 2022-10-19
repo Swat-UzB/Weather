@@ -9,9 +9,8 @@ object Constants {
     const val CURRENT_LOCATION_LOCATION = "current_location"
     const val CURRENT_OTHER_LOCATION = "other_location"
     const val TIME_STRING_FORMAT = "yyyy-MM-dd HH:mm"
-    const val TIME_FORMAT = "yyyy-MM-dd"
+    const val TIME_CURRENT_FORMAT = "EEE, HH:mm"
     const val PACKAGE_NAME = "com.swat_uzb.weatherapp"
-    const val BASE_URL_WEATHER_API = "https://api.weatherapi.com/v1/"
     const val TAG_WORKER = "UpdateWeatherDataWorker"
     const val KEY_VALUE_TOKEN = "key"
 

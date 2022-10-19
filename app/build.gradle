@@ -7,12 +7,12 @@ plugins {
 }
 
 android {
-    compileSdk 31
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.swat_uzb.weatherapp"
         minSdk 21
-        targetSdk 31
+        targetSdk 32
         versionCode 1
         versionName "1.0"
 
@@ -48,8 +48,8 @@ android {
 
 dependencies {
     implementation 'com.google.android.material:material:1.6.1'
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.appcompat:appcompat:1.4.2'
+    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     testImplementation 'junit:junit:4.+'
@@ -58,14 +58,14 @@ dependencies {
 
 
     ///////////////////////////////////Room////////////////////////////////////
-    implementation("androidx.room:room-runtime:$roomVersion")
-    implementation "androidx.room:room-ktx:$roomVersion"
-    kapt("androidx.room:room-compiler:$roomVersion")
+    implementation("androidx.room:room-runtime:$room_version")
+    implementation "androidx.room:room-ktx:$room_version"
+    kapt("androidx.room:room-compiler:$room_version")
     ///////////////////////////////////Retrofit////////////////////////////////
-    implementation "com.squareup.retrofit2:retrofit:$retrofitVersion"
-    implementation "com.squareup.retrofit2:converter-gson:$retrofitVersion"
-    implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'
-    implementation "com.google.code.gson:gson:$retrofitVersion"
+    implementation "com.squareup.retrofit2:retrofit:$retrofit_version"
+    implementation "com.squareup.retrofit2:converter-gson:$retrofit_version"
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$retrofit2_coroutine_version"
+    implementation "com.google.code.gson:gson:$retrofit_version"
     implementation("com.squareup.okhttp3:okhttp:$okhttp_version")
     implementation("com.squareup.okhttp3:logging-interceptor:$okhttp_version")
     //////////////////////////////////Lifecycle/////////////////////////////////
@@ -86,19 +86,19 @@ dependencies {
     /////////////////////////////////////WorkManager///////////////////////////////////
     implementation("androidx.work:work-runtime-ktx:$work_version")
     /////////////////////////////////////Preference/////////////////////////////////////
-    implementation 'androidx.preference:preference-ktx:1.2.0'
+    implementation "androidx.preference:preference-ktx:$preference_version"
     /////////////////////////////////RecyclerView Animator///////////////////////////
-    implementation 'jp.wasabeef:recyclerview-animators:4.0.2'
+    implementation "jp.wasabeef:recyclerview-animators:$recyc_anim_version"
     ///////////////////////////////////Firebase//////////////////////////////////////
     // Import the Firebase BoM
-    implementation platform('com.google.firebase:firebase-bom:29.1.0')
+    implementation platform("com.google.firebase:firebase-bom:$firebase_bom_version")
     //dependency for the Firebase SDK for Google Analytics
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     ////////////////////////////////////////Permissions/////////////////////////////////
-    implementation 'com.google.android.gms:play-services-location:20.0.0'
+    implementation "com.google.android.gms:play-services-location:$loc_service_version"
     ///////////////////////////////////////////Scroll effect////////////////////////////
     implementation "io.github.everythingme:overscroll-decor-android:$overscroll_version"
     ////////////////////////////////////////Lottie//////////////////////////////////////
-    implementation 'com.airbnb.android:lottie:3.4.0'
+    implementation "com.airbnb.android:lottie:$lottie_version"
 }

@@ -1,7 +1,6 @@
 package com.swat_uzb.weatherapp.ui.fragments.add_location
 
 import androidx.recyclerview.widget.DiffUtil
-import com.swat_uzb.weatherapp.domain.model.CurrentUi
 
 class BaseDiffUtil<T> : DiffUtil.ItemCallback<T>() {
     override fun areItemsTheSame(

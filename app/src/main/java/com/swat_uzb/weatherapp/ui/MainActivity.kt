@@ -1,18 +1,21 @@
 package com.swat_uzb.weatherapp.ui
 
 import android.Manifest
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentSender
 import android.content.SharedPreferences
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
@@ -36,12 +39,13 @@ import com.google.android.gms.location.*
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.swat_uzb.weatherapp.R
-import com.swat_uzb.weatherapp.UpdateWeatherDataWorker
 import com.swat_uzb.weatherapp.databinding.ActivityMainBinding
 import com.swat_uzb.weatherapp.ui.viewmodels.SharedViewModel
-import com.swat_uzb.weatherapp.utils.Constants.CURRENT_OTHER_LOCATION
 import com.swat_uzb.weatherapp.utils.Constants.TAG_WORKER
 import com.swat_uzb.weatherapp.utils.CustomAlertDialogFragment
+import com.swat_uzb.weatherapp.utils.cancelNotifications
+import com.swat_uzb.weatherapp.utils.sendNotification
+import com.swat_uzb.weatherapp.workmanager.UpdateWeatherDataWorker
 import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
@@ -61,6 +65,9 @@ class MainActivity : DaggerAppCompatActivity(), SharedPreferences.OnSharedPrefer
 
     @Inject
     lateinit var sharedViewModel: SharedViewModel
+
+    @Inject
+    lateinit var notificationManager: NotificationManager
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
@@ -92,12 +99,14 @@ class MainActivity : DaggerAppCompatActivity(), SharedPreferences.OnSharedPrefer
 
         setupDialogFragmentListener()
 
-
+        createChannel()
     }
 
     private fun startWorkManager(intervalTime: Long) {
 
+
         val workManager = WorkManager.getInstance(this)
+
         val weatherConstraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
@@ -105,21 +114,17 @@ class MainActivity : DaggerAppCompatActivity(), SharedPreferences.OnSharedPrefer
         val updateWeatherWorkerRequest =
             PeriodicWorkRequestBuilder<UpdateWeatherDataWorker>(intervalTime, TimeUnit.HOURS)
                 .setConstraints(weatherConstraints)
-                .setInitialDelay(15, TimeUnit.MINUTES)
-//                .addTag(TAG_WORKER)
-//                .setBackoffCriteria(BackoffPolicy.EXPONENTIAL, 30, TimeUnit.SECONDS)
+                .setInitialDelay(intervalTime/2, TimeUnit.HOURS)
                 .build()
 
         if (intervalTime == 0L) {
             workManager.cancelUniqueWork(TAG_WORKER)
-            Toast.makeText(this, "worker stopped", Toast.LENGTH_SHORT).show()
         } else {
             workManager.enqueueUniquePeriodicWork(
                 TAG_WORKER,
                 ExistingPeriodicWorkPolicy.REPLACE,
                 updateWeatherWorkerRequest
             )
-            Toast.makeText(this, "worker started $intervalTime", Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -142,7 +147,6 @@ class MainActivity : DaggerAppCompatActivity(), SharedPreferences.OnSharedPrefer
             with(binding.appBarMain.toolbarLocationName) {
                 it?.let {
                     text = it.region
-                    Log.d("TTTT", "mainactivity addLocation ${it.current_location}")
                     if (it.current_location) {
                         setCompoundDrawablesWithIntrinsicBounds(
                             R.drawable.ic_location_on,
@@ -166,14 +170,14 @@ class MainActivity : DaggerAppCompatActivity(), SharedPreferences.OnSharedPrefer
             sharedViewModel.checkPermission
                 .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
-                    Log.i("TTTT", "checkPermission collect")
                     enableGps()
                 }
         }
+//        subscribe notification to the currentUi data
+        subscribeNotification()
     }
 
     private fun checkPermission() {
-        Log.i("TTTT", "checkPermission work")
         when {
             ContextCompat.checkSelfPermission(
                 this, Manifest.permission.ACCESS_FINE_LOCATION
@@ -190,7 +194,6 @@ class MainActivity : DaggerAppCompatActivity(), SharedPreferences.OnSharedPrefer
                 this,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) -> {
-                Log.i("TTTT", "checkPermission should show")
 
                 // Request permission
                 requestPermissionsLauncher.launch(
@@ -201,7 +204,6 @@ class MainActivity : DaggerAppCompatActivity(), SharedPreferences.OnSharedPrefer
                 )
             }
             else -> {
-                Log.i("TTTT", "checkPermission should else")
                 // Request permission
                 requestPermissionsLauncher.launch(
                     arrayOf(
@@ -220,14 +222,12 @@ class MainActivity : DaggerAppCompatActivity(), SharedPreferences.OnSharedPrefer
             when (actionMap.key) {
                 Manifest.permission.ACCESS_FINE_LOCATION -> {
                     if (actionMap.value) {
-                        Log.i("TTTT", "ACCESS_FINE_LOCATION Granted")
                         checkPermission()
 
                     } else {
                         customAlertDialogFragment.show(
                             supportFragmentManager, CustomAlertDialogFragment.TAG
                         )
-                        Log.i("TTTT", " requestPermissionsLauncher ACCESS_FINE_LOCATION Denied")
                     }
                 }
             }
@@ -303,6 +303,8 @@ class MainActivity : DaggerAppCompatActivity(), SharedPreferences.OnSharedPrefer
             interval = 10000
             fastestInterval = 5000
         }
+
+
         val settingsBuilder = LocationSettingsRequest.Builder()
             .addLocationRequest(mLocationRequest)
         settingsBuilder.setAlwaysShow(true)
@@ -311,7 +313,6 @@ class MainActivity : DaggerAppCompatActivity(), SharedPreferences.OnSharedPrefer
         result.addOnFailureListener {
             if (it is ResolvableApiException) {
                 try {
-                    Log.i("TTTT", "try add on failureListener")
                     val intentSenderRequest = IntentSenderRequest.Builder(it.resolution).build()
                     launcher.launch(intentSenderRequest)
                 } catch (sendIntentException: IntentSender.SendIntentException) {
@@ -343,14 +344,28 @@ class MainActivity : DaggerAppCompatActivity(), SharedPreferences.OnSharedPrefer
                 startWorkManager(sharedViewModel.getAutoRefresh().toLong())
             }
             getString(R.string.key_notification) -> {
-                Toast.makeText(
-                    this,
-                    sharedViewModel.getNotification().toString(),
-                    Toast.LENGTH_SHORT
-                ).show()
+                subscribeNotification()
+            }
+            getString(R.string.key_temperature) -> {
+                subscribeNotification()
             }
         }
 
+    }
+
+    private fun subscribeNotification() {
+        lifecycleScope.launch {
+            sharedViewModel.allLocations.flowWithLifecycle(
+                lifecycle, Lifecycle.State.STARTED
+            )
+                .collect {
+                    if (sharedViewModel.getNotification() && it.isNotEmpty()) {
+                        notificationManager.sendNotification(it.first(), this@MainActivity)
+                    } else {
+                        notificationManager.cancelNotifications()
+                    }
+                }
+        }
     }
 
     override fun onStart() {
@@ -363,5 +378,25 @@ class MainActivity : DaggerAppCompatActivity(), SharedPreferences.OnSharedPrefer
         super.onStop()
         PreferenceManager.getDefaultSharedPreferences(this)
             .unregisterOnSharedPreferenceChangeListener(this)
+    }
+
+    private fun createChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val notificationChannel = NotificationChannel(
+                getString(R.string.channel_id),
+                getString(R.string.channel_name),
+                NotificationManager.IMPORTANCE_LOW
+            )
+                .apply {
+                    setShowBadge(false)
+                }
+
+            notificationChannel.apply {
+                enableLights(true)
+                lightColor = Color.RED
+                description = getString(R.string.weather_notification_channel_description)
+            }
+            notificationManager.createNotificationChannel(notificationChannel)
+        }
     }
 }

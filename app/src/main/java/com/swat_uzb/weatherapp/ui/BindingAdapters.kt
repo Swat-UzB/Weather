@@ -9,11 +9,7 @@ import com.swat_uzb.weatherapp.utils.Constants.PACKAGE_NAME
 import java.lang.Exception
 
 
-class BindingAdapters {
-    companion object {
-
         @BindingAdapter("region", "country")
-        @JvmStatic
         fun bindCountryName(view: TextView, region: String, country: String) {
             view.text = if (region.isEmpty()) {
                 country
@@ -23,7 +19,6 @@ class BindingAdapters {
         }
 
         @BindingAdapter("android:load_image")
-        @JvmStatic
         fun bindLoadData(view: ImageView, url: String?) {
             url?.let {
                 try {
@@ -39,7 +34,6 @@ class BindingAdapters {
         }
 
         @BindingAdapter("android:uv")
-        @JvmStatic
         fun bindUvIndex(view: TextView, index: Int) {
             view.text = when (index) {
                 in 0..2 -> "Low"
@@ -49,5 +43,3 @@ class BindingAdapters {
                 else -> "Extreme"
             }
         }
-    }
-}

@@ -18,7 +18,7 @@ interface CurrentWeatherDao {
     @Query("SELECT * FROM current_data WHERE current_id=:currentId")
    suspend fun loadCurrentWeather(currentId: Long): CurrentWeatherEntity
 
-    @Query("SELECT * FROM current_data ")
+    @Query("SELECT * FROM current_data ORDER BY current_location DESC")
     fun loadAllLocationsAsFlow(): Flow<List<CurrentWeatherEntity>>
 
     @Query("SELECT * FROM current_data ORDER BY current_location DESC")

@@ -18,15 +18,14 @@
         <TextView
             android:id="@+id/forecast_item_view_day_of_month"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:text="@{dailyForecast.day_of_week}"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_constrainedWidth="true"
             app:layout_constraintBottom_toTopOf="@id/forecast_item_view_day_week"
             app:layout_constraintEnd_toStartOf="@id/guideline6"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="wednesday" />
+            tools:text="wednesday"
+            style="@style/style_forecast" />
 
 
         <TextView
@@ -45,9 +44,8 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/forecast_item_view_humidity_percentage"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            style="@style/style_forecast"
             android:text='@{dailyForecast.chance_of_rain+"%"}'
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_constraintBaseline_toBaselineOf="@+id/forecast_item_view_min_temp"
             app:layout_constraintStart_toEndOf="@id/guideline6"
             tools:text="99%" />
@@ -82,10 +80,9 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/forecast_item_view_max_temp"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
             android:gravity="start"
             android:text='@{dailyForecast.max_temp+"\u00B0 "}'
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            style="@style/style_forecast"
             app:layout_constraintBaseline_toBaselineOf="@+id/forecast_item_view_min_temp"
             app:layout_constraintEnd_toStartOf="@id/forecast_item_view_min_temp"
             app:layout_constraintStart_toStartOf="@+id/guideline5"
@@ -94,10 +91,9 @@
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/forecast_item_view_min_temp"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            style="@style/style_forecast"
             android:gravity="start"
             android:text='@{dailyForecast.min_temp+"\u00B0"}'
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/forecast_item_view_max_temp"

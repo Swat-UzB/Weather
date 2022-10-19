@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
-import com.swat_uzb.weatherapp.UpdateWeatherDataWorker
 import javax.inject.Inject
 
 class SampleWorkerFactory @Inject constructor(

@@ -29,9 +29,11 @@
             android:id="@+id/search_location_item_view_country_text_view"
             country="@{search.country}"
             region="@{search.region}"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="@dimen/font_size_20"
+            app:layout_constraintWidth=""
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/search_location_item_view_region_text_view"
             tools:text="Uzbekistan" />

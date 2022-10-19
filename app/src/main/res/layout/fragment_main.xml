@@ -12,6 +12,7 @@
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/refresh_layout"
+        android:background="?attr/color_main_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -30,7 +31,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/fragment_main_current_weather_card_view"
                     style="@style/card_view_style"
-                   android:layout_marginVertical="@dimen/grid_8"
+                    android:layout_marginVertical="@dimen/grid_8"
                     app:cardCornerRadius="@dimen/card_view_corner_radius"
                     app:layout_constraintEnd_toStartOf="@id/fragment_main_guideline_end"
                     app:layout_constraintStart_toEndOf="@id/fragment_main_guideline_begin"
@@ -44,23 +45,23 @@
                             android:id="@+id/fragment_main_current_weather_icon_image_view"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
-                            android:layout_margin="@dimen/grid_16"
-                            android:layout_marginTop="15dp"
+                            android:layout_margin="@dimen/grid_8"
+                            android:adjustViewBounds="true"
                             android:contentDescription="@string/current_weather_desc"
                             android:load_image="@{currentEntity.icon_url}"
-                            android:scaleType="fitCenter"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintDimensionRatio="1:1"
                             app:layout_constraintEnd_toStartOf="@+id/current_data_container"
+                            app:layout_constraintHorizontal_chainStyle="spread"
                             app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent" />
+                            app:layout_constraintTop_toTopOf="parent"
+                            tools:src="@drawable/_00_day" />
 
                         <LinearLayout
                             android:id="@+id/current_data_container"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/grid_8"
-                            android:layout_marginBottom="@dimen/grid_8"
+                            android:layout_margin="@dimen/grid_8"
                             android:orientation="vertical"
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -72,7 +73,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text='@{currentEntity.temp+"\u00B0"}'
-                                android:textSize="@dimen/font_size_64"
+                                android:textAppearance="@style/TextAppearance.AppCompat.Display3"
                                 tools:text="25\u00B0" />
 
                             <TextView
@@ -80,7 +81,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text='@{"Feels like " + currentEntity.feels_like +"\u00B0" }'
-                                android:textSize="14sp"
                                 tools:text="Feels like 25\u00B0" />
 
                             <TextView
@@ -88,7 +88,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@{currentEntity.local_time}"
-                                android:textSize="14sp"
                                 tools:text="Sat, 12:11" />
 
                             <TextView
@@ -96,7 +95,6 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text='@{currentEntity.location}'
-                                android:textSize="@dimen/font_size_14"
                                 tools:text="25\u00B0 / 10\u00B0" />
                         </LinearLayout>
 
@@ -107,6 +105,7 @@
                     android:id="@+id/fragment_main_hourly_weather_card_view"
                     style="@style/card_view_style"
                     android:layout_marginVertical="@dimen/grid_8"
+                    android:background="?attr/color_main_background"
                     app:cardCornerRadius="@dimen/card_view_corner_radius"
                     app:layout_constraintEnd_toStartOf="@id/fragment_main_guideline_end"
                     app:layout_constraintStart_toEndOf="@id/fragment_main_guideline_begin"
@@ -116,8 +115,8 @@
                         android:id="@+id/fragment_main_hourly_weather_recycler_view"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_margin="@dimen/grid_8"
                         android:orientation="horizontal"
+                        android:paddingHorizontal="@dimen/grid_4"
                         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
                         tools:listitem="@layout/hourly_weather_item_view" />
                 </com.google.android.material.card.MaterialCardView>
@@ -173,6 +172,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/sunrise_text"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                             app:layout_constraintEnd_toStartOf="@id/view_4"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -205,6 +205,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/sunset_text"
+                            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@id/view_4"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -283,6 +284,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/uv_text"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                                 app:layout_constraintTop_toTopOf="parent" />
 
                             <TextView
@@ -329,7 +331,8 @@
                                 android:id="@+id/fragment_main_astronomy_humidity_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/humidity_text" />
+                                android:text="@string/humidity_text"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
                             <TextView
                                 android:id="@+id/fragment_main_astronomy_humidity_percentage"
@@ -364,7 +367,8 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/grid_8"
-                                android:text="@string/wind_text" />
+                                android:text="@string/wind_text"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
                             <TextView
                                 android:id="@+id/fragment_main_astronomy_wind_percentage"
@@ -380,7 +384,8 @@
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/fragment_main_moon_astronomy_card_view"
                     style="@style/card_view_style"
-                   android:layout_marginVertical="@dimen/grid_8"
+
+                    android:layout_marginVertical="@dimen/grid_8"
                     app:cardCornerRadius="@dimen/card_view_corner_radius"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toStartOf="@id/fragment_main_guideline_end"
@@ -419,6 +424,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/moonrise_text"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                                 app:layout_constraintTop_toTopOf="parent" />
 
                             <TextView
@@ -454,7 +460,8 @@
                                 android:id="@+id/fragment_main_moon_astronomy_moonset_text"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="@string/moonset_text" />
+                                android:text="@string/moonset_text"
+                                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1" />
 
                             <TextView
                                 android:id="@+id/fragment_main_moon_astronomy_moonset_time"

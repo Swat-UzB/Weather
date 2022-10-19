@@ -78,6 +78,7 @@ class SharedViewModel @Inject constructor(
     fun addCurrentLocation() {
         showProgressBar()
         getLastLocation {
+
             it.let {
                 viewModelScope.launch(Dispatchers.IO) {
                     _addLocation.emit(it)

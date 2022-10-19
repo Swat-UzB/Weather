@@ -1,7 +1,6 @@
 package com.swat_uzb.weatherapp.ui.fragments.search_location
 
 import android.content.DialogInterface
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem

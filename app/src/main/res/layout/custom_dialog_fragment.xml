@@ -10,14 +10,14 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/grid_16">
+        android:padding="@dimen/grid_8">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/custom_dialog_fragment_header"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/font_size_24"
-            android:textStyle="bold"
+            android:text="@string/use_current_location_title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -28,9 +28,8 @@
             android:id="@+id/custom_dialog_fragment_content"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/grid_16"
-            android:padding="@dimen/grid_8"
-            android:textSize="@dimen/font_size_16"
+            android:layout_marginTop="@dimen/grid_8"
+            android:textAppearance="@style/TextAppearance.Material3.BodyLarge"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/custom_dialog_fragment_header"
@@ -44,8 +43,8 @@
             android:background="@android:color/transparent"
             android:elevation="@dimen/grid_0"
             android:text="@string/button_str_disagree"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:textAllCaps="false"
-            android:textSize="@dimen/font_size_20"
             app:layout_constraintEnd_toStartOf="@id/divider"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/custom_dialog_fragment_content" />
@@ -57,9 +56,9 @@
             android:layout_marginTop="@dimen/grid_8"
             android:background="@android:color/transparent"
             android:elevation="@dimen/grid_0"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
             android:text="@string/button_str_agree"
             android:textAllCaps="false"
-            android:textSize="@dimen/font_size_20"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/divider"
             app:layout_constraintTop_toBottomOf="@id/custom_dialog_fragment_content" />
