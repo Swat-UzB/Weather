@@ -22,10 +22,10 @@ Weather app has a lot of features:
 This is first version of weather  app. We will try our my best to make this daily weather forecast app better and better.
 please download weather forecast app and use as a weather channel to get weather information hourly and daily
 link in play market https://play.google.com/store/apps/details?id=com.swat_uzb.weatherapp
-#Main screen
+# Main screen
 ![1](https://user-images.githubusercontent.com/61419443/204130385-34ed0e08-a37b-4cf1-bf81-a865983145a7.png)
-#Manage location screen
+# Manage location screen
 ![2](https://user-images.githubusercontent.com/61419443/204130389-627ec07e-8230-4208-8594-abfdc1bc7adc.png)
-#Search location screen
+# Search location screen
 ![3](https://user-images.githubusercontent.com/61419443/204130390-4ab21cc8-0ced-4cdb-9ffb-54a83709961e.png)
 
