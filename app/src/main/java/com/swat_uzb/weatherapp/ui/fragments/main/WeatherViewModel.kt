@@ -1,22 +1,23 @@
 package com.swat_uzb.weatherapp.ui.fragments.main
 
 import android.location.Location
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.swat_uzb.weatherapp.domain.model.CurrentUi
 import com.swat_uzb.weatherapp.domain.model.DailyUi
 import com.swat_uzb.weatherapp.domain.model.HourlyUi
+import com.swat_uzb.weatherapp.domain.model.compareDate
 import com.swat_uzb.weatherapp.domain.usecase.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.SharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
+import com.swat_uzb.weatherapp.ui.viewmodels.BaseViewModel
+import kotlinx.coroutines.flow.*
 import javax.inject.Inject
 import javax.inject.Singleton
+
+data class MainUiState(
+    val currentUi: CurrentUi? = null,
+    val listDailyUi: List<DailyUi> = emptyList(),
+    val listHourlyUi: List<HourlyUi> = emptyList(),
+    val isLoading: Boolean = true,
+    val isEmpty: Boolean = false
+)
 
 @Singleton
 class WeatherViewModel @Inject constructor(
@@ -26,34 +27,37 @@ class WeatherViewModel @Inject constructor(
     private val getLocationsListUseCase: GetLocationsListUseCase,
     private val fetchForecastFromWeatherApi: FetchForecastFromWeatherApi,
     private val updateLocationDataUseCase: UpdateLocationDataUseCase
-) : ViewModel() {
-    private val _current = MutableLiveData<CurrentUi>()
-    val current: LiveData<CurrentUi> get() = _current
+) : BaseViewModel() {
 
-    private val _dailyForecast = MutableLiveData<List<DailyUi>>()
-    val dailyForecast: LiveData<List<DailyUi>> get() = _dailyForecast
+    var isUpdate = false
+    private val _uiState = MutableStateFlow(MainUiState())
+    val uiState: StateFlow<MainUiState> = _uiState.asStateFlow()
 
-    private val _hourlyForecast = MutableLiveData<List<HourlyUi>>()
-    val hourlyForecast: LiveData<List<HourlyUi>> get() = _hourlyForecast
+    private val _uiError = MutableSharedFlow<Throwable>()
+    val uiError: SharedFlow<Throwable> = _uiError.asSharedFlow()
 
-    private var _error = MutableSharedFlow<Throwable>()
-    val error: SharedFlow<Throwable> = _error.asSharedFlow()
+
+    fun onRefreshFlow() = prefs.isRefreshOnLaunchOn()
 
     fun loadCurrentData(favouriteLocationId: Long) {
-        viewModelScope.launch(Dispatchers.IO) {
+        launchViewModelScope {
             val current = loadLocationDataUseCase.loadLocationData(favouriteLocationId)
-            _current.postValue(current)
             val hourly = loadHourlyListByCurrentId.getHourlyList(favouriteLocationId)
-            _hourlyForecast.postValue(hourly)
             val daily = loadDailyByCurrentIdUseCase.getDailyList(favouriteLocationId)
-            _dailyForecast.postValue(daily)
+            _uiState.update { currentUiState ->
+                currentUiState.copy(
+                    currentUi = current,
+                    listHourlyUi = hourly.filter { it.compareDate() },
+                    listDailyUi = daily
+                )
+            }
         }
     }
 
     fun updateDataUi(id: Long, location: Location?, isGranted: Boolean = true) {
-        viewModelScope.launch(Dispatchers.IO) {
-            getLocationsListUseCase.getLocationsList().onSuccess { it ->
-                it.map { currentUi ->
+        launchViewModelScope {
+            getLocationsListUseCase.getLocationsList().onSuccess { listCurrentUi ->
+                listCurrentUi.map { currentUi ->
                     var currentUiNew = currentUi
                     when {
                         currentUi.current_location && !isGranted -> {
@@ -78,12 +82,13 @@ class WeatherViewModel @Inject constructor(
                                     }
                                 }
                         }
-                        .onFailure {
-                            _error.emit(it)
-                            return@launch
+                        .onFailure { error ->
+                            hideLoading()
+                            _uiError.emit(error)
                         }
                 }
             }
+
         }
     }
 }

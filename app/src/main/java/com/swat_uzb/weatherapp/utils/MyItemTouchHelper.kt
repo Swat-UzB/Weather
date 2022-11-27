@@ -5,13 +5,10 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.swat_uzb.weatherapp.R
-import com.swat_uzb.weatherapp.ui.fragments.add_location.LocationsAdapter
 import javax.inject.Inject
 
 
-class MyItemTouchHelper @Inject constructor(
-    private val locationsAdapter: LocationsAdapter
-) : ItemTouchHelper.Callback() {
+class MyItemTouchHelper @Inject constructor() : ItemTouchHelper.Callback() {
 
     override fun getMovementFlags(
         recyclerView: RecyclerView,
@@ -20,14 +17,6 @@ class MyItemTouchHelper @Inject constructor(
         val dragFlags: Int = ItemTouchHelper.UP or ItemTouchHelper.DOWN
         val swipeFlags: Int = ItemTouchHelper.START or ItemTouchHelper.END
         return makeMovementFlags(dragFlags, swipeFlags)
-    }
-
-    override fun isLongPressDragEnabled(): Boolean {
-        return super.isLongPressDragEnabled()
-    }
-
-    override fun isItemViewSwipeEnabled(): Boolean {
-        return super.isItemViewSwipeEnabled()
     }
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
@@ -68,16 +57,6 @@ class MyItemTouchHelper @Inject constructor(
 
     private var onItemMoveListener: ((fromPosition: Int, toPosition: Int) -> Unit)? = null
 
-    fun setOnItemMove(
-        listener: (fromPosition: Int, toPosition: Int) -> Unit
-    ) {
-        onItemMoveListener = listener
-    }
-
     private var onItemSwipedListener: ((Position: Int) -> Unit)? = null
-
-    fun setOnItemSwiped(listener: (Position: Int) -> Unit) {
-        onItemSwipedListener = listener
-    }
 
 }

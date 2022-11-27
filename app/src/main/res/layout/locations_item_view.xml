@@ -1,23 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
-
-    <data>
-
-        <variable
-            name="currentWeather"
-            type="com.swat_uzb.weatherapp.domain.model.CurrentUi" />
-    </data>
-
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/locations_container"
-        style="@style/Widget.Material3.CardView.Elevated"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/grid_4"
-        app:cardBackgroundColor="?attr/colorOnPrimary"
-        app:cardCornerRadius="@dimen/card_view_corner_radius">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/locations_container"
+    style="@style/Widget.Material3.CardView.Elevated"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginVertical="@dimen/grid_4"
+    app:cardBackgroundColor="?attr/colorOnPrimary"
+    app:cardCornerRadius="@dimen/card_view_corner_radius">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -30,7 +21,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:gravity="bottom"
-                android:text='@{currentWeather.temp +"\u00B0"}'
                 android:textAppearance="@style/TextAppearance.Material3.DisplayMedium"
                 app:layout_constrainedHeight="true"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -43,8 +33,7 @@
                 android:id="@+id/locations_item_view_feels_like_temp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-              android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle2"
-                android:text='@{"Feels like " + currentWeather.feels_like + "\u00B0"}'
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
                 app:layout_constraintEnd_toStartOf="@id/guideline3"
                 app:layout_constraintStart_toEndOf="@id/guideline2"
                 app:layout_constraintTop_toBottomOf="@id/locations_item_view_region"
@@ -56,16 +45,16 @@
                 android:layout_height="@dimen/grid_20"
                 android:contentDescription="@string/humidity_icon_desc"
                 android:src="@drawable/ic_humidity"
-                app:layout_constraintBottom_toBottomOf="@id/locations_item_view_humidity_index"
-                app:layout_constraintEnd_toStartOf="@id/locations_item_view_humidity_index"
+                app:layout_constraintBottom_toBottomOf="@id/locations_item_view_chance_of_rain"
+                app:layout_constraintEnd_toStartOf="@id/locations_item_view_chance_of_rain"
                 app:layout_constraintStart_toStartOf="@id/locations_item_view_feels_like_temp"
-                app:layout_constraintTop_toTopOf="@id/locations_item_view_humidity_index" />
+                app:layout_constraintTop_toTopOf="@id/locations_item_view_chance_of_rain" />
 
             <TextView
-                android:id="@+id/locations_item_view_humidity_index"
+                android:id="@+id/locations_item_view_chance_of_rain"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text='@{currentWeather.humidity+"%"}'
+                android:layout_marginStart="@dimen/grid_4"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/locations_item_view_humidity_icon"
@@ -77,7 +66,6 @@
                 android:id="@+id/locations_item_view_region"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@{currentWeather.location}"
                 android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
                 app:layout_constraintEnd_toStartOf="@id/guideline3"
                 app:layout_constraintStart_toStartOf="@id/locations_item_view_current_temp"
@@ -89,7 +77,6 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/current_weather_desc"
-                android:load_image="@{currentWeather.icon_url}"
                 android:padding="@dimen/grid_4"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -114,4 +101,3 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
-</layout>

@@ -1,123 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="@dimen/grid_4">
 
-    <data>
 
-        <variable
-            name="dailyForecast"
-            type="com.swat_uzb.weatherapp.domain.model.DailyUi" />
-    </data>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/forecast_item_view_day_of_month"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/grid_4">
-
-        <TextView
-            android:id="@+id/forecast_item_view_day_of_month"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@{dailyForecast.day_of_week}"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toTopOf="@id/forecast_item_view_day_week"
-            app:layout_constraintEnd_toStartOf="@id/guideline6"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="wednesday" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toTopOf="@id/forecast_item_view_day_week"
+        app:layout_constraintEnd_toStartOf="@id/guideline6"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="wednesday" />
 
 
-        <TextView
-            android:id="@+id/forecast_item_view_day_week"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="@{dailyForecast.date}"
-            android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
-            app:layout_constrainedWidth="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/forecast_item_view_day_of_month"
-            app:layout_constraintStart_toStartOf="@id/forecast_item_view_day_of_month"
-            app:layout_constraintTop_toBottomOf="@id/forecast_item_view_day_of_month"
-            tools:text="February 5" />
+    <TextView
+        android:id="@+id/forecast_item_view_day_week"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.Material3.BodyMedium"
+        app:layout_constrainedWidth="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/forecast_item_view_day_of_month"
+        app:layout_constraintStart_toStartOf="@id/forecast_item_view_day_of_month"
+        app:layout_constraintTop_toBottomOf="@id/forecast_item_view_day_of_month"
+        tools:text="February 5" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/forecast_item_view_humidity_percentage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text='@{dailyForecast.chance_of_rain+"%"}'
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            app:layout_constraintBaseline_toBaselineOf="@+id/forecast_item_view_min_temp"
-            app:layout_constraintStart_toEndOf="@id/guideline6"
-            tools:text="99%" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/forecast_item_view_chance_of_rain"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        app:layout_constraintBaseline_toBaselineOf="@+id/forecast_item_view_min_temp"
+        app:layout_constraintStart_toEndOf="@id/guideline6"
+        tools:text="99%" />
 
-        <ImageView
-            android:id="@+id/forecast_item_view_humidity_icon"
-            android:layout_width="@dimen/grid_16"
-            android:layout_height="@dimen/grid_16"
-            android:layout_marginEnd="@dimen/grid_4"
-            android:contentDescription="@string/humidity_icon_desc"
-            android:src="@drawable/ic_humidity"
-            app:layout_constraintBottom_toBottomOf="@+id/forecast_item_view_humidity_percentage"
-            app:layout_constraintEnd_toStartOf="@id/forecast_item_view_humidity_percentage"
-            app:layout_constraintTop_toTopOf="@+id/forecast_item_view_humidity_percentage"
-            tools:layout_editor_absoluteX="161dp" />
+    <ImageView
+        android:id="@+id/forecast_item_view_humidity_icon"
+        android:layout_width="@dimen/grid_16"
+        android:layout_height="@dimen/grid_16"
+        android:layout_marginEnd="@dimen/grid_4"
+        android:contentDescription="@string/humidity_icon_desc"
+        android:src="@drawable/ic_humidity"
+        app:layout_constraintBottom_toBottomOf="@+id/forecast_item_view_chance_of_rain"
+        app:layout_constraintEnd_toStartOf="@id/forecast_item_view_chance_of_rain"
+        app:layout_constraintTop_toTopOf="@+id/forecast_item_view_chance_of_rain"
+        tools:layout_editor_absoluteX="161dp" />
 
-        <ImageView
-            android:id="@+id/forecast_item_view_weather_icon"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:adjustViewBounds="true"
-            android:contentDescription="@string/current_weather_desc"
-            android:load_image="@{dailyForecast.icon_url}"
-            android:padding="@dimen/grid_4"
-            android:scaleType="centerCrop"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintDimensionRatio="1:1"
-            app:layout_constraintEnd_toStartOf="@+id/guideline5"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/_00_day" />
+    <ImageView
+        android:id="@+id/forecast_item_view_weather_icon"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/current_weather_desc"
+        android:padding="@dimen/grid_4"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintDimensionRatio="1:1"
+        app:layout_constraintEnd_toStartOf="@+id/guideline5"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/_00_day" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/forecast_item_view_max_temp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:text='@{dailyForecast.max_temp+"\u00B0 "}'
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            app:layout_constraintBaseline_toBaselineOf="@+id/forecast_item_view_min_temp"
-            app:layout_constraintEnd_toStartOf="@id/forecast_item_view_min_temp"
-            app:layout_constraintStart_toStartOf="@+id/guideline5"
-            tools:text="125\u00B0" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/forecast_item_view_max_temp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        app:layout_constraintBaseline_toBaselineOf="@+id/forecast_item_view_min_temp"
+        app:layout_constraintEnd_toStartOf="@id/forecast_item_view_min_temp"
+        app:layout_constraintStart_toStartOf="@+id/guideline5"
+        tools:text="125\u00B0" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/forecast_item_view_min_temp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:text='@{dailyForecast.min_temp+"\u00B0"}'
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/forecast_item_view_max_temp"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="125\u00B0" />
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/forecast_item_view_min_temp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/forecast_item_view_max_temp"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="125\u00B0" />
 
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.75" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75" />
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/guideline6"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            app:layout_constraintGuide_percent="0.5" />
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</layout>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,6 @@ import android.app.Application
 import com.swat_uzb.weatherapp.app.BaseApplication
 import com.swat_uzb.weatherapp.di.module.ActivityBuildersModule
 import com.swat_uzb.weatherapp.di.module.AppModule
-import com.swat_uzb.weatherapp.di.module.RepoModule
 import dagger.BindsInstance
 import dagger.Component
 import dagger.android.AndroidInjector
@@ -15,10 +14,8 @@ import javax.inject.Singleton
 @Component(
     modules = [
         AndroidSupportInjectionModule::class,
-        RepoModule::class,
-        AppModule::class,
-        ActivityBuildersModule::class
-    ]
+        ActivityBuildersModule::class,
+        AppModule::class]
 )
 interface ApplicationComponent : AndroidInjector<BaseApplication> {
 

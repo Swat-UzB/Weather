@@ -3,7 +3,6 @@ package com.swat_uzb.weatherapp.utils
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.core.os.bundleOf
 import androidx.fragment.app.DialogFragment
@@ -27,16 +26,6 @@ class CustomAlertDialogFragment @Inject constructor() : DialogFragment() {
             .setPositiveButton(getString(R.string.menu_settings), listener)
             .setNegativeButton(getString(R.string.alert_dialog_cancel), listener)
             .create()
-    }
-
-    override fun onDismiss(dialog: DialogInterface) {
-        super.onDismiss(dialog)
-        Log.d(TAG, "Dialog dismissed")
-    }
-
-    override fun onCancel(dialog: DialogInterface) {
-        super.onCancel(dialog)
-        Log.d(TAG, "Dialog cancelled")
     }
 
     companion object {

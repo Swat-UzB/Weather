@@ -2,9 +2,6 @@ package com.swat_uzb.weatherapp.utils
 
 import android.app.Application
 import android.content.SharedPreferences
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.swat_uzb.weatherapp.R
 import com.swat_uzb.weatherapp.utils.Constants.DEFAULT_AUTO_REFRESH
 import com.swat_uzb.weatherapp.utils.Constants.DEFAULT_TEMPERATURE
@@ -18,15 +15,10 @@ class SharedPreferencesHelper @Inject constructor(
     private val context: Application,
     private val prefs: SharedPreferences
 ) {
-    private val onLaunchRefresh = MutableLiveData<Boolean>()
     private val editor = prefs.edit()
 
-    fun isRefreshOnLaunchOn(): LiveData<Boolean> {
-        onLaunchRefresh.postValue(
-            prefs.getBoolean(context.getString(R.string.key_refresh_on_launch), false)
-        )
-        return onLaunchRefresh
-    }
+    fun isRefreshOnLaunchOn() = prefs.getBoolean(context.getString(R.string.key_refresh_on_launch), false)
+
 
     fun getAutoRefresh() = prefs.getString(
         context.getString(R.string.key_auto_refresh),
@@ -78,7 +70,6 @@ class SharedPreferencesHelper @Inject constructor(
     )
 
     fun setIsFistTime(boolean: Boolean) {
-        Log.d("TTTT", "setIsFirstTime $boolean")
         editor.putBoolean(
             context.getString(R.string.key_is_first_time),
             boolean

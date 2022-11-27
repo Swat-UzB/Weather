@@ -113,7 +113,7 @@ class WeatherRepositoryImpl @Inject constructor(
     override suspend fun insertDailyForecast(forecast: ForecastData, currentId: Long) {
         dailyForecastDao.insertDailyForecast(
             forecast.forecast.forecastDay.map { daily ->
-                forecast.toDailyForecastEntity(daily.day, currentId, daily.date)
+                toDailyForecastEntity(daily.day, currentId, daily.date)
             })
     }
 
@@ -135,7 +135,7 @@ class WeatherRepositoryImpl @Inject constructor(
         forecastData.forecast.forecastDay.map { forecasts ->
             hourlyDataDao.insertHourlyData(
                 forecasts.hour.map { hour ->
-                    forecastData.toHourlyDataEntity(hour, currentId)
+                    toHourlyDataEntity(hour, currentId)
                 })
         }
     }

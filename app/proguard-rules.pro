@@ -24,3 +24,9 @@ public static boolean isLoggable(java.lang.String, int);
 public static int v(...);
 public static int d(...);
 public static int i(...);}
+-dontnote okhttp3.**, okio.**, retrofit2.**
+-dontwarn retrofit2.**
+-keep class retrofit2.** { *; }
+-keep class com.swat_uzb.weatherapp.data.model** {
+    *;
+}

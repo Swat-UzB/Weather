@@ -12,7 +12,6 @@ import com.swat_uzb.weatherapp.domain.model.CurrentUi
 import com.swat_uzb.weatherapp.domain.model.DailyUi
 import com.swat_uzb.weatherapp.domain.model.HourlyUi
 import com.swat_uzb.weatherapp.utils.Constants.TIME_CURRENT_FORMAT
-import com.swat_uzb.weatherapp.utils.Constants.TIME_STRING_FORMAT
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
@@ -50,10 +49,11 @@ fun ForecastData.toCurrentWeatherEntity(
         moonset = forecast.forecastDay[0].astro.moonset,
         sunrise = forecast.forecastDay[0].astro.sunrise,
         sunset = forecast.forecastDay[0].astro.sunset,
+        chance_of_rain = forecast.forecastDay[0].day.daily_chance_of_rain.roundToInt(),
         current_location = isCurrent
     )
 
-fun ForecastData.toHourlyDataEntity(hour: Hour, currentId: Long) = HourlyDataEntity(
+fun toHourlyDataEntity(hour: Hour, currentId: Long) = HourlyDataEntity(
     chance_of_rain = hour.chance_of_rain,
     chance_of_snow = hour.chance_of_snow,
     cloud = hour.cloud,
@@ -82,7 +82,7 @@ fun ForecastData.toHourlyDataEntity(hour: Hour, currentId: Long) = HourlyDataEnt
 
 )
 
-fun ForecastData.toDailyForecastEntity(day: Day, currentId: Long, date: String) =
+fun toDailyForecastEntity(day: Day, currentId: Long, date: String) =
     DailyForecastEntity(
         chance_of_rain = day.daily_chance_of_rain,
         condition = day.condition.text,
@@ -95,38 +95,6 @@ fun ForecastData.toDailyForecastEntity(day: Day, currentId: Long, date: String) 
         currentId = currentId
     )
 
-private fun convertDateToDayOfWeek(date: String): String {
-    if (date == getCurrentDate()) {
-        return "Today"
-    }
-    val day = date.takeLast(2).toInt()
-    val yearLastTwo = date.substring(2, 4).toInt()
-    val month = date.substring(5, 7).toInt()
-    val yearCode = (6 + yearLastTwo + yearLastTwo / 4) % 7
-    val monthCode = when (month) {
-        1, 10 -> 1
-        12, 9 -> 6
-        5 -> 2
-        8 -> 3
-        2, 3, 11 -> 4
-        6 -> 5
-        4, 7 -> 0
-        else -> 10
-    }
-
-    var result = (day + monthCode + yearCode) % 7
-    if (yearLastTwo % 4 == 0 && (month == 1 || month == 2)) result -= 1
-    return when (result) {
-        0 -> "Saturday"
-        1 -> "Sunday"
-        2 -> "Monday"
-        3 -> "Tuesday"
-        4 -> "Wednesday"
-        5 -> "Thursday"
-        6 -> "Friday"
-        else -> "Unknown"
-    }
-}
 
 private fun bindDate(date: String) = when (
     date.substring(5, 7).toInt()) {
@@ -167,9 +135,7 @@ private fun getCorrect(boolean: Boolean, case1: Int, case2: Int) =
     case1.takeIf { boolean } ?: case2
 
 private fun getUrl(str: String): String {
-    str.substring(str.indexOf("4/") + 2, str.lastIndexOf(".")).apply {
-        return "@drawable/_${drop(indexOf("/") + 2)}_${take(indexOf("/"))}"
-    }
+    return  str.substring(str.indexOf("4/") + 2, str.lastIndexOf("."))
 }
 
 @SuppressLint("SimpleDateFormat")
@@ -185,6 +151,7 @@ fun CurrentWeatherEntity.toCurrentUi(isSelsiy: Boolean, isMps: Boolean) = Curren
     daytime,
     getCorrect(isSelsiy, feels_like_c, feels_like_f),
     humidity,
+    chance_of_rain,
     getUrl(icon_url),
     latitude,
     local_time,
@@ -210,8 +177,7 @@ fun DailyForecastEntity.toDailyUi(isSelsiy: Boolean) = DailyUi(
     getUrl(icon_url),
     getCorrect(isSelsiy, max_temp_c, max_temp_f),
     getCorrect(isSelsiy, min_temp_c, min_temp_f),
-    convertDateToDayOfWeek(date)
-)
+    date)
 
 fun HourlyDataEntity.toHourlyUi(isSelsiy: Boolean) = HourlyUi(
     id, getCorrect(isSelsiy, temp_c, temp_f), getUrl(icon_url), time

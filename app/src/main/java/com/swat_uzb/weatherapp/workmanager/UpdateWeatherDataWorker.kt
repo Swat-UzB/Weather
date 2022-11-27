@@ -28,7 +28,6 @@ class UpdateWeatherDataWorker @AssistedInject constructor(
 
     override suspend fun doWork(): Result {
         getLocationsListUseCase.getLocationsList().onSuccess {
-            if (it.isEmpty()) return Result.failure()
             it.forEach { currentUi ->
                 fetchForecastFromWeatherApi.fetchForecastFromWeatherApi(currentUi.locationToString())
                     .onSuccess { data ->

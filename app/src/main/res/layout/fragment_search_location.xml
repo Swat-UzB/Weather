@@ -43,18 +43,14 @@
         app:layout_constraintTop_toBottomOf="@id/add_current_button"
         tools:listitem="@layout/search_location_item_view" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/add_current_button"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginVertical="@dimen/grid_8"
-        android:padding="@dimen/grid_16"
-        android:backgroundTint="?attr/colorOnPrimary"
+        android:layout_margin="@dimen/grid_8"
+        app:cornerRadius="@dimen/grid_16"
         android:text="@string/add_current_button_str"
-        android:textAllCaps="false"
-        android:textColor="?android:textColorPrimary"
-        android:textSize="@dimen/font_size_16"
-        android:visibility="gone"
+        style="@style/ThemeOverlay.Material3.Button.ElevatedButton"
         app:layout_constraintBottom_toTopOf="@id/fragment_search_location_search_recycler_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

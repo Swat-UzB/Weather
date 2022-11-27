@@ -19,6 +19,6 @@ abstract class FragmentBuildersModule {
     @ContributesAndroidInjector
     abstract fun contributeAddLocationFragment(): AddLocationFragment
 
-    @ContributesAndroidInjector()
+    @ContributesAndroidInjector
     abstract fun contributeSearchLocationFragment(): SearchLocationFragment
 }

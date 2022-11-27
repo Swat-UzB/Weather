@@ -5,31 +5,37 @@ buildscript {
         retrofit_version = "2.9.0"
         okhttp_version = "4.9.3"
         lifecycle_version = "2.5.1"
-        nav_version = "2.5.2"
+        nav_version = "2.5.3"
         daggerVersion = "2.40.5"
         overscroll_version = "1.1.1"
         coroutines_version = "1.6.1"
         work_version = "2.7.1"
-        kotlin_version = "1.6.10"
+        kotlin_version = "1.7.20"
         preference_version = "1.2.0"
         recyc_anim_version = "4.0.2"
         lottie_version = "3.4.0"
-        loc_service_version = "21.0.0"
-        firebase_bom_version = "29.1.0"
+        loc_service_version = "20.0.0"
         retrofit2_coroutine_version = "0.9.2"
+        google_ser_version = "4.3.14"
+        firebase_bom_version = "31.0.1"
+        firebase_crashlytics_version = "2.9.2"
+        pref_version = "1.4.2"
     }
     repositories {
+
         google()
         mavenCentral()
     }
     dependencies {
-        classpath "com.android.tools.build:gradle:7.0.4"
+        classpath 'com.android.tools.build:gradle:7.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        classpath 'com.google.gms:google-services:4.3.14'
+        classpath "com.google.gms:google-services:$google_ser_version"
         // Crashlytics Gradle plugin
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.9.2'
+        classpath "com.google.firebase:firebase-crashlytics-gradle:$firebase_crashlytics_version"
+        classpath "com.google.firebase:perf-plugin:$pref_version"
     }
 }
+
 
 task clean(type: Delete) {
     delete rootProject.buildDir

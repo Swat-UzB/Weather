@@ -1,6 +1,5 @@
 package com.swat_uzb.weatherapp.ui.fragments.search_location
 
-import android.content.DialogInterface
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -15,16 +14,16 @@ import androidx.navigation.fragment.findNavController
 import com.swat_uzb.weatherapp.R
 import com.swat_uzb.weatherapp.databinding.FragmentSearchLocationBinding
 import com.swat_uzb.weatherapp.ui.fragments.BaseFragment
-import com.swat_uzb.weatherapp.utils.Constants.CURRENT_LOCATION_LOCATION
-import com.swat_uzb.weatherapp.utils.Constants.NOT_SET
-import com.swat_uzb.weatherapp.utils.CustomDialogFragment
 import kotlinx.coroutines.launch
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
 import javax.inject.Inject
 
-
-class SearchLocationFragment :
-    BaseFragment<FragmentSearchLocationBinding>(FragmentSearchLocationBinding::inflate),
+/**
+ * This fragment allows the user to search locations,
+ * view list of locations on the screen and locations to db  .
+ */
+class SearchLocationFragment : BaseFragment<FragmentSearchLocationBinding>
+    (FragmentSearchLocationBinding::inflate),
     SearchView.OnQueryTextListener {
 
     @Inject
@@ -35,12 +34,37 @@ class SearchLocationFragment :
 
     override fun onViewCreate() {
         // Check permission isGranted
-        checkLocation()
-
+        checkAddButton()
         // Observe Data
         subscribeData()
 
         // set menu
+        setUpMenu()
+
+        // RecyclerView OnItemClick
+        searchAdapter.setOnItemClickListener { search ->
+            // Adding new location
+            sharedViewModel.showLoading()
+            searchViewModel.addLocation(search.lat, search.lon)
+        }
+
+        // on click the addButton add current location to db
+        binding.addCurrentButton.setOnClickListener {
+            with(sharedViewModel) {
+                showLoading()
+                clearLocationFromShare()
+                setIsFirstTime(true)
+                setLocation(0)
+            }
+            checkLocation()
+        }
+
+        // setup RecyclerView
+        setUpRecyclerView()
+    }
+
+
+    private fun setUpMenu() {
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
@@ -61,80 +85,52 @@ class SearchLocationFragment :
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-        // RecyclerView OnItemClick
-        searchAdapter.setOnItemClickListener {
-            // Adding new location
-            searchViewModel.addLocation(it.lat, it.lon)
-        }
-
-        binding.addCurrentButton.setOnClickListener {
-            sharedViewModel.clearLocationFromShare()
-            sharedViewModel.setIsFirstTime(true)
-            checkLocation()
-        }
-
-        // setup RecyclerView
-        setUpRecyclerView()
-
-
     }
 
     private fun subscribeData() {
-        sharedViewModel.hideProgressBar()
+        val lottieVis = binding.lottieAnim
         lifecycleScope.launch {
-            searchViewModel.showProgressBar
+            searchViewModel.uiState
                 .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .collect { visible ->
-                    with(binding.fragmentSearchProgressBar) {
-                        visibility = if (visible) {
-                            binding.lottieAnim.visibility = View.GONE
-                            View.VISIBLE
-                        } else {
-                            View.GONE
-                        }
-                    }
-                }
-        }
-        lifecycleScope.launch {
-            searchViewModel.searchList
-                .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .collect {
-                    searchAdapter.submitList(it)
-                    if (it.isEmpty()) {
+                .collect { searchUiState ->
+                    searchAdapter.submitList(searchUiState.resultList)
+
+                    if (searchUiState.isEmpty) {
                         checkAddButton()
-                        binding.lottieAnim.visibility = View.VISIBLE
+                        lottieVis.visibility = View.VISIBLE
                     } else {
-                        binding.lottieAnim.visibility = View.INVISIBLE
+                        lottieVis.visibility = View.INVISIBLE
                         binding.addCurrentButton.visibility = View.GONE
                     }
+                    if (searchUiState.isAddedLocation) {
+                        findNavController().navigateUp()
+                    }
+                    sharedViewModel.hideLoading()
                 }
         }
         lifecycleScope.launch {
             sharedViewModel.addLocation
                 .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .collect {
-                    searchViewModel.addLocation(it.latitude, it.longitude, current = true)
-                    sharedViewModel.setCurrentLocationAddedValue(true)
-
+                .collect { location ->
+                    searchViewModel.addLocation(
+                        location.latitude,
+                        location.longitude,
+                        current = true
+                    )
                 }
         }
         lifecycleScope.launch {
-            searchViewModel.isExistLocation
+            searchViewModel.uiError
                 .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                .collect {
-                    if (it) {
-                        sharedViewModel.makeToast(getString(R.string.toast_exist))
-                    } else {
-                        findNavController().navigateUp()
-                    }
+                .collect { error ->
+                    sharedViewModel.onError(error)
                 }
         }
         lifecycleScope.launch {
-            searchViewModel.error
+            searchViewModel.uiAlreadyExist
                 .flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
                 .collect {
-                    sharedViewModel.handleError(it)
+                    sharedViewModel.showMessageExistMessage()
                 }
         }
     }
@@ -142,46 +138,16 @@ class SearchLocationFragment :
     private fun checkLocation() {
         checkAddButton()
         with(sharedViewModel) {
-            when (getLocation()) {
-                NOT_SET -> {
-                    setupDialogFragment()
-                    setupDialogFragmentListener()
-                }
-                CURRENT_LOCATION_LOCATION -> {
-
-                    if (sharedViewModel.getIsFirstTime()) {
-                        sharedViewModel.setIsFirstTime(false)
-                        postCheckPermissionValue()
-                    }
-                }
+            if (getIsFirstTime()) {
+                setIsFirstTime(false)
+                postCheckPermissionValue()
             }
         }
     }
 
-    private fun setupDialogFragment() {
-        CustomDialogFragment.show(
-            childFragmentManager,
-            getString(R.string.use_current_location_title),
-            getString(R.string.message_permission),
-            getString(R.string.button_str_disagree),
-            getString(R.string.button_str_agree)
-        )
-    }
-
-    private fun setupDialogFragmentListener() {
-        CustomDialogFragment.setupListener(childFragmentManager, viewLifecycleOwner) {
-            with(sharedViewModel) {
-                when (it) {
-                    DialogInterface.BUTTON_NEGATIVE -> {
-                        setLocation(1)
-                    }
-                    DialogInterface.BUTTON_POSITIVE -> {
-                        setLocation(0)
-                        checkLocation()
-                    }
-                }
-            }
-        }
+    private fun checkAddButton() {
+        binding.addCurrentButton.visibility =
+            if (sharedViewModel.isCurrentLocationAdded()) View.GONE else View.VISIBLE
     }
 
     private fun setUpRecyclerView() = binding.fragmentSearchLocationSearchRecyclerView.apply {
@@ -200,12 +166,6 @@ class SearchLocationFragment :
     override fun onQueryTextChange(query: String?): Boolean {
         getSearchList(query)
         return true
-    }
-
-    private fun checkAddButton() {
-
-        binding.addCurrentButton.visibility =
-            if (sharedViewModel.isCurrentLocationAdded()) View.GONE else View.VISIBLE
     }
 
     private fun getSearchList(query: String?) {

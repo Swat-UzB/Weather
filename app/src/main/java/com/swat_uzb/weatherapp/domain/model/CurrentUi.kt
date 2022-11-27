@@ -8,6 +8,7 @@ data class CurrentUi(
     val daytime: Boolean,
     val feels_like: Int,
     val humidity: Int,
+    val chance_of_rain: Int,
     val icon_url: String,
     val latitude: Double,
     val local_time: String,

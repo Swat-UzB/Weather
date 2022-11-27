@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
     id 'com.google.firebase.crashlytics'
+    id 'com.google.firebase.firebase-perf'
 }
 
 android {
@@ -11,10 +12,10 @@ android {
 
     defaultConfig {
         applicationId "com.swat_uzb.weatherapp"
-        minSdk 21
-        targetSdk 32
-        versionCode 1
-        versionName "1.0"
+        minSdk 24
+        targetSdk 33
+        versionCode 8
+        versionName "1.0.3"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 
@@ -24,7 +25,6 @@ android {
         buildConfigField "String", "APP_ID_WEATHER_API", "\"${properties.getProperty("APP_ID_WEATHER_API")}\""
 
     }
-
 
     buildTypes {
         release {
@@ -41,13 +41,18 @@ android {
         jvmTarget = '1.8'
     }
     buildFeatures {
-        dataBinding true
         viewBinding true
     }
+    bundle {
+        storeArchive {
+            enable = false
+        }
+    }
+    namespace 'com.swat_uzb.weatherapp'
 }
 
 dependencies {
-    implementation 'com.google.android.material:material:1.6.1'
+    implementation 'com.google.android.material:material:1.7.0'
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.5.1'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -93,6 +98,7 @@ dependencies {
     // Import the Firebase BoM
     implementation platform("com.google.firebase:firebase-bom:$firebase_bom_version")
     //dependency for the Firebase SDK for Google Analytics
+    implementation 'com.google.firebase:firebase-perf-ktx'
     implementation 'com.google.firebase:firebase-analytics-ktx'
     implementation 'com.google.firebase:firebase-crashlytics-ktx'
     ////////////////////////////////////////Permissions/////////////////////////////////

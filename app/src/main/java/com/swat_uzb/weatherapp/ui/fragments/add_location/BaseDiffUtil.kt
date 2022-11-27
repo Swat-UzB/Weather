@@ -1,8 +1,9 @@
 package com.swat_uzb.weatherapp.ui.fragments.add_location
 
+import android.annotation.SuppressLint
 import androidx.recyclerview.widget.DiffUtil
 
-class BaseDiffUtil<T> : DiffUtil.ItemCallback<T>() {
+class BaseDiffUtil<T : Any> : DiffUtil.ItemCallback<T>() {
     override fun areItemsTheSame(
         oldItem: T,
         newItem: T
@@ -10,6 +11,7 @@ class BaseDiffUtil<T> : DiffUtil.ItemCallback<T>() {
         return oldItem == newItem
     }
 
+    @SuppressLint("DiffUtilEquals")
     override fun areContentsTheSame(
         oldItem: T,
         newItem: T

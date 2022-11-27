@@ -2,13 +2,11 @@ package com.swat_uzb.weatherapp.data.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
 
 
 @Database(
     entities = [CurrentWeatherEntity::class, DailyForecastEntity::class, HourlyDataEntity::class],
-    version = 2
+    version = 3
 )
 abstract class WeatherAppDatabase : RoomDatabase() {
 

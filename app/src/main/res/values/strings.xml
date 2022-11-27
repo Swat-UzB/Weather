@@ -5,10 +5,13 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_share">Share this app</string>
 
+    <string name="percentage_of" translatable="false">%d%%</string>
+
+
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="nav_header_title">Weather</string>
-    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_subtitle" translatable="false">android.studio@android.com</string>
     <string name="nav_header_desc">Navigation header</string>
     <string name="menu_rate">Rate this app</string>
     <string name="toolbar_tashkent">Tashkent</string>
@@ -21,14 +24,16 @@
     <string name="humidity_text">Humidity</string>
     <string name="wind_text">Wind</string>
     <string name="wind_icon_text">Wind icon</string>
-
+    <string name="feels_like">Feels like %d\u00B0</string>
     <string name="temperature">Temperature</string>
     <string name="wind_speed">Wind speed</string>
     <string name="location">Location</string>
     <string name="notification">Notification</string>
     <string name="auto_refresh">Auto refresh</string>
     <string name="refresh_on_launch">Refresh on launch</string>
-    <string name="degree_sign">%s\u00B0</string>
+    <string name="degree_sign" translatable="false">%d\u00B0</string>
+    <string name="share_app_type" translatable="false">text/plain</string>
+    <string name="share_app_link" translatable="false">http://play.google.com/store/apps/details?id=%s</string>
     <string name="version_text">version %s</string>
     <string name="current_weather_desc">current weather icon</string>
     <string name="sunrise_icon_desc">Sunrise icon</string>
@@ -41,28 +46,44 @@
     <string name="moonrise_text">Moonrise</string>
     <string name="uv_text">UV index</string>
     <string name="toast_exist">Location already exist</string>
-    <string name="message_permission">\u0020\u0020Your current location will be collected and used to provide some of the Weather app features such as getting your local weather</string>
+    <string name="message_permission">\u0020\u0020Your current location will be collected and used to provide some of the Weather app features such as getting your local weather.</string>
     <string name="permission_granted">Permission granted</string>
     <string name="permission_required">We need this permission</string>
     <string name="ok">OK</string>
     <string name="alert_dialog_title">Weather Needs Permission</string>
     <string name="alert_dialog_cancel">Cancel</string>
-    <string name="alert_dialog_message">"To ensure accuracy, please set location access to \"Allow all the time\" in your device settings."</string>
+    <string name="alert_dialog_message">"To ensure accuracy, please set location access to \"Allow only while using the app\" in your device settings."</string>
     <string name="button_str_agree">Agree</string>
     <string name="button_str_disagree">Disagree</string>
     <string name="use_current_location_title">Use current location</string>
     <string name="check_conn_toast_text">Check internet connection and try again</string>
-    <string name="progress_bar">progress bar</string>
-    <string name="package_text">package</string>
+    <string name="progress_bar" translatable="false">progress bar</string>
+    <string name="package_text" translatable="false">package</string>
     <string name="no_network_str">No network connection</string>
+    <string name="unable_to_connect_server">Unable to connect to server. Please check your internet connection.</string>
     <string name="something_wrong_str">Something went wrong</string>
     <string name="add_current_text">Add current location</string>
     <string name="add_current_button_str">Add current location</string>
-    <string name="header_desc">Bukhara historical place</string>
+    <string name="header_desc">"The Kalyan Mosque Bukhara "</string>
     <string name="weather_notification_channel_description">Weather information</string>
-    <string name="channel_id">ChannelId</string>
-    <string name="channel_name">Weather Channel</string>
+    <string name="channel_id" translatable="false">ChannelId</string>
+    <string name="channel_name" translatable="false">Weather Channel</string>
 
+    // UV Scales
+    <string name="uv_scale_low">Low</string>
+    <string name="uv_scale_moderate">Moderate</string>
+    <string name="uv_scale_high">High</string>
+    <string name="uv_scale_very_high">Very High</string>
+    <string name="uv_scale_extreme">Extreme</string>
+    <string name="today_str">Today</string>
+    <string name="str_sunday">Sunday</string>
+    <string name="str_monday">Monday</string>
+    <string name="str_tuesday">Tuesday</string>
+    <string name="str_wednesday">Wednesday</string>
+    <string name="str_thursday">Thursday</string>
+    <string name="str_friday">Friday</string>
+    <string name="str_saturday">Saturday</string>
+    <string name="str_worng_day">Wrong Day</string>
 
     <string-array name="temperature_entries">
         <item>\u00B0C</item>

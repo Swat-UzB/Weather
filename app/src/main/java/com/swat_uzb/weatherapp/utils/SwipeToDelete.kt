@@ -2,7 +2,6 @@ package com.swat_uzb.weatherapp.utils
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.swat_uzb.weatherapp.ui.fragments.add_location.LocationsViewHolder
 
 abstract class SwipeToDelete :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.START or ItemTouchHelper.END) {

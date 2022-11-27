@@ -1,11 +1,12 @@
 package com.swat_uzb.weatherapp.utils
 
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.swat_uzb.weatherapp.R
@@ -16,6 +17,8 @@ private const val NOTIFICATION_ID = 0xCA7
 
 fun NotificationManager.sendNotification(currentUi: CurrentUi, applicationContext: Context) {
 
+    createChannel(applicationContext)
+
     val contentIntent = Intent(applicationContext, MainActivity::class.java).apply {
         flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
     }
@@ -24,27 +27,28 @@ fun NotificationManager.sendNotification(currentUi: CurrentUi, applicationContex
         applicationContext,
         NOTIFICATION_ID,
         contentIntent,
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) PendingIntent.FLAG_IMMUTABLE else 0
+        PendingIntent.FLAG_IMMUTABLE
     )
-
-    val imageResource =
-        applicationContext.resources.getIdentifier(currentUi.icon_url, null, Constants.PACKAGE_NAME)
-
-
+    val drawable = currentUi.icon_url.getDrawable()
     val weatherIcon = BitmapFactory.decodeResource(
-        applicationContext.resources, imageResource
+        applicationContext.resources, drawable
     )
-//    val bitmap =
-//        Bitmap.createScaledBitmap(weatherIcon, weatherIcon.width / 2, weatherIcon.height * 2, true)
-    // Build the notification
+
     val builder = NotificationCompat.Builder(
         applicationContext,
         applicationContext.getString(R.string.channel_id)
     )
 
-        .setSmallIcon(imageResource)
+        .setSmallIcon(drawable)
         .setContentTitle("${currentUi.temp}° ${currentUi.region}")
-        .setContentText("${currentUi.condition} Feels like ${currentUi.feels_like}°")
+        .setContentText(
+            "${currentUi.condition} | ${
+                applicationContext.getString(
+                    R.string.feels_like,
+                    currentUi.feels_like
+                )
+            }"
+        )
         .setContentIntent(contentPendingIntent)
         .setOngoing(true)
         .setPriority(NotificationCompat.PRIORITY_LOW)
@@ -57,4 +61,23 @@ fun NotificationManager.sendNotification(currentUi: CurrentUi, applicationContex
 
 fun NotificationManager.cancelNotifications() {
     cancelAll()
+}
+
+fun NotificationManager.createChannel(context: Context) {
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val notificationChannel = NotificationChannel(
+            context.getString(R.string.channel_id),
+            context.getString(R.string.channel_name),
+            NotificationManager.IMPORTANCE_LOW
+        ).apply {
+            setShowBadge(false)
+        }
+
+        notificationChannel.apply {
+            enableLights(true)
+            lightColor = Color.RED
+            description = context.getString(R.string.weather_notification_channel_description)
+        }
+        createNotificationChannel(notificationChannel)
+    }
 }

@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Ob-havo</string>
+    <string name="menu_locations">Joylar</string>
+    <string name="menu_settings">Sozlamalar</string>
+    <string name="menu_share">Ushbu ilovani ulashish</string>
+    <string name="navigation_drawer_open">Navigatsiya panelini oching</string>
+    <string name="navigation_drawer_close">"Navigatsiya panelini yoping"</string>
+    <string name="nav_header_title">Ob-havo</string>
+    <string name="menu_rate">Navigatsiya sarlavhasi</string>
+    <string name="toolbar_tashkent">Ushbu ilovani baholang</string>
+    <string name="menu_edit">Tahrirlash</string>
+    <string name="menu_search">Qidirish</string>
+    <string name="sunrise_text">Quyosh chiqishi</string>
+    <string name="sunset_text">Quyosh botishi</string>
+    <string name="humidity_text">Namlik</string>
+    <string name="wind_text">Shamol</string>
+    <string name="wind_icon_text">Shamol belgisi</string>
+    <string name="temperature">Temperatura</string>
+    <string name="wind_speed">Shamol tezligi</string>
+    <string name="notification">Bildirishnoma</string>
+    <string name="auto_refresh">Avtomatik yangilash</string>
+    <string name="refresh_on_launch">Ishga tushganda yangilash</string>
+    <string name="version_text">talqin %s</string>
+    <string name="current_weather_desc">joriy ob-havo belgisi</string>
+    <string name="sunrise_icon_desc">Quyosh chiqishi belgisi</string>
+    <string name="sunset_icon_desc">quyosh botishi belgisi</string>
+    <string name="uv_icon_desc">UV belgisi</string>
+    <string name="humidity_icon_desc">Namlik belgisi</string>
+    <string name="moonrise_icon_desc">Oy chiqishi belgisi</string>
+    <string name="moonset_icon_desc">Oy botishi belgisi</string>
+    <string name="moonset_text">Oy botishi</string>
+    <string name="moonrise_text">Oy chiqishi</string>
+    <string name="uv_text">UV indeksi</string>
+    <string name="message_permission">\\u0020\\u0020Joriy joylashuvingiz toʻplanadi va ob-havo ilovasining baʼzi funksiyalarini, masalan, mahalliy ob-havo maʼlumotlarini olish uchun foydalaniladi.</string>
+    <string name="permission_granted">Ruxsat olindi</string>
+    <string name="permission_required">Bizga bu ruxsat kerak</string>
+    <string name="ok">OK</string>
+    <string name="alert_dialog_title">Ob-havoga ruxsat kerak</string>
+    <string name="alert_dialog_cancel">Bekor qilish</string>
+    <string name="alert_dialog_message">Aniqligini taʼminlash uchun qurilmangiz sozlamalarida joylashuv maʼlumotlariga kirishni “Har doim ruxsat berish”ga oʻrnating.</string>
+    <string name="button_str_agree">Roziman</string>
+    <string name="button_str_disagree">Rozi emasman</string>
+    <string name="use_current_location_title">Joriy joylashuvdan foydalanish</string>
+    <string name="check_conn_toast_text">Internetga ulanishni tekshiring va qayta urinib ko\'ring</string>
+    <string name="no_network_str">Tarmoqqa ulanish yo\'q</string>
+    <string name="something_wrong_str">Nimadir noto\'g\'ri bajarildi</string>
+    <string name="add_current_text">Joriy joylashuvni qo\'shing</string>
+    <string name="header_desc">Buxorodagi Poi Kalon masjidi</string>
+    <string name="weather_notification_channel_description">Ob-havo ma\'lumotlari</string>
+    <string name="toast_exist">Manzil allaqachon mavjud</string>
+    <string name="location">Joylashuv</string>
+    <string name="menu_add_location">Joylashuvni qo\'shish</string>
+    <string name="menu_search_locations">Joylashuvni qidirish</string>
+    <string name="nav_header_desc">Navigatsiya sarlavhasi</string>
+    <string name="add_current_button_str">Joriy joylashuvni qo\'shish</string>
+
+    <string-array name="wind_speed_entries">
+        <item>km/s</item>
+        <item>m/s</item>
+    </string-array>
+
+
+    <string-array name="location_entries">
+        <item>Joriy joylashuv</item>
+        <item>Boshqa joy</item>
+    </string-array>
+
+
+    <string-array name="auto_refresh_entries">
+        <item>Hech qachon</item>
+        <item>Har soatda</item>
+        <item>har 3 soatda</item>
+        <item>har 6 soatda</item>
+        <item>har 12 soatda</item>
+        <item>har 24 soatda</item>
+    </string-array>
+    <string name="unable_to_connect_server">Serverga ulanish imkonsiz. Internet ulanishingizni tekshiring.</string>
+    <string name="feels_like">%d\u00B0 dek tuyuladi</string>
+    <string name="uv_scale_low">Past</string>
+    <string name="uv_scale_moderate">O\'rtacha</string>
+    <string name="uv_scale_high">Yuqori</string>
+    <string name="uv_scale_very_high">Juda yuqori</string>
+    <string name="uv_scale_extreme">Ekstremal</string>
+    <string name="today_str">Bugun</string>
+    <string name="str_sunday">Yakshanba</string>
+    <string name="str_monday">Dushanba</string>
+    <string name="str_worng_day">noto\'g\'ri kun</string>
+    <string name="str_saturday">Суббота</string>
+    <string name="str_friday">Juma</string>
+    <string name="str_tuesday">Seshanba</string>
+    <string name="str_wednesday">Chorshanba</string>
+    <string name="str_thursday">Payshanba</string>
+</resources>

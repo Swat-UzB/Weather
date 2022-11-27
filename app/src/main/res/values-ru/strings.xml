@@ -1,0 +1,114 @@
+<resources>
+    <string name="app_name">Погода</string>
+
+    <string name="menu_locations">Места</string>
+    <string name="menu_settings">Настройки</string>
+    <string name="menu_share">Поделиться этим приложением</string>
+
+    <string name="navigation_drawer_open">Открыть панель навигации</string>
+    <string name="navigation_drawer_close">Закрыть панель навигации</string>
+    <string name="nav_header_title">Погода</string>
+    <string name="nav_header_desc">Заголовок навигации</string>
+    <string name="menu_rate">Оцени это приложение</string>
+    <string name="toolbar_tashkent">Ташкент</string>
+    <string name="menu_search_locations">Поиск мест</string>
+    <string name="menu_add_location">Добавить местоположение</string>
+    <string name="menu_edit">Редактировать</string>
+    <string name="menu_search">Поиск</string>
+    <string name="sunrise_text">Восход</string>
+    <string name="sunset_text">Закат солнца</string>
+    <string name="humidity_text">Влажность</string>
+    <string name="wind_text">Ветер</string>
+    <string name="wind_icon_text">Значок ветра</string>
+
+    <string name="temperature">Температура</string>
+    <string name="wind_speed">Скорость ветра</string>
+    <string name="location">Расположение</string>
+    <string name="notification">Уведомление</string>
+    <string name="auto_refresh">Автоматическое обновление</string>
+    <string name="refresh_on_launch">Обновлять при запуске</string>
+    <string name="version_text">версия %s</string>
+    <string name="current_weather_desc">значок текущей погоды</string>
+    <string name="sunrise_icon_desc">Значок восхода солнца</string>
+    <string name="sunset_icon_desc">значок заката</string>
+    <string name="uv_icon_desc">Значок УФ</string>
+    <string name="humidity_icon_desc">Значок влажности</string>
+    <string name="moonrise_icon_desc">Значок восхода луны</string>
+    <string name="moonset_icon_desc">Значок захода луны</string>
+    <string name="moonset_text">Заход луны</string>
+    <string name="moonrise_text">Восход луны</string>
+    <string name="uv_text">УФ-индекс</string>
+    <string name="toast_exist">Местоположение уже существует</string>
+    <string name="message_permission">\\u0020\\u0020Ваше текущее местоположение будет собираться и использоваться для предоставления некоторых функций приложения Погода, таких как получение вашей местной погоды.</string>
+    <string name="permission_granted">Разрешение получено</string>
+    <string name="permission_required">Нам нужно это разрешение</string>
+    <string name="ok">ХОРОШО</string>
+    <string name="alert_dialog_title">Погода требует разрешения</string>
+    <string name="alert_dialog_cancel">Отмена</string>
+    <string name="alert_dialog_message">«Для обеспечения точности установите для доступа к местоположению значение \"Разрешить все время\" в настройках вашего устройства».</string>
+    <string name="button_str_agree">Согласен</string>
+    <string name="button_str_disagree">Не согласен</string>
+    <string name="use_current_location_title">Использовать текущее местоположение</string>
+    <string name="check_conn_toast_text">Проверьте подключение к Интернету и повторите попытку</string>
+    <string name="no_network_str">Нет подключения к сети</string>
+    <string name="something_wrong_str">Что-то пошло не так</string>
+    <string name="add_current_text">Добавить текущее местоположение</string>
+    <string name="add_current_button_str">Добавить текущее местоположение</string>
+    <string name="header_desc">Мечеть Калян Бухара</string>
+    <string name="weather_notification_channel_description">Информация о погоде</string>
+
+
+    <string-array name="temperature_entries">
+        <item>\u00B0C</item>
+        <item>\u00B0F</item>
+    </string-array>
+    <string-array name="temperature_values">
+        <item>temp_c</item>
+        <item>temp_f</item>
+    </string-array>
+
+    <string-array name="wind_speed_entries">
+        <item>км/ч</item>
+        <item>м/с</item>
+    </string-array>
+
+
+    <string-array name="location_entries">
+        <item>Текущее местоположение</item>
+        <item>Другое место</item>
+    </string-array>
+
+
+    <string-array name="auto_refresh_entries">
+        <item>Никогда</item>
+        <item>Каждый час</item>
+        <item>каждые 3 часа</item>
+        <item>каждые 6 часов</item>
+        <item>каждые 12 часов</item>
+        <item>каждые 24 часа</item>
+    </string-array>
+    <string-array name="auto_refresh_values">
+        <item>0</item>
+        <item>1</item>
+        <item>3</item>
+        <item>6</item>
+        <item>12</item>
+        <item>24</item>
+    </string-array>
+    <string name="unable_to_connect_server">Невозможно подключиться к серверу. Пожалуйста, проверьте подключение к интернету.</string>
+    <string name="feels_like">Ощущается %d\u00B0</string>
+    <string name="uv_scale_low">Низкий</string>
+    <string name="uv_scale_moderate">Умеренный</string>
+    <string name="uv_scale_high">Высокий</string>
+    <string name="uv_scale_very_high">Очень высокий</string>
+    <string name="uv_scale_extreme">Экстремальный</string>
+    <string name="today_str">Cегодня</string>
+    <string name="str_sunday">Воскресенье</string>
+    <string name="str_monday">Понедельник</string>
+    <string name="str_worng_day">Неправильный день</string>
+    <string name="str_saturday">Суббота</string>
+    <string name="str_tuesday">Вторник</string>
+    <string name="str_wednesday">Среда</string>
+    <string name="str_thursday">Четверг</string>
+    <string name="str_friday">Пятница</string>
+</resources>

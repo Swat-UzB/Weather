@@ -2,10 +2,12 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <SwitchPreferenceCompat
+        android:defaultValue="true"
         app:key="@string/key_refresh_on_launch"
         app:title="@string/refresh_on_launch" />
 
     <ListPreference
+
         android:defaultValue="temp_c"
         android:entries="@array/temperature_entries"
         android:entryValues="@array/temperature_values"

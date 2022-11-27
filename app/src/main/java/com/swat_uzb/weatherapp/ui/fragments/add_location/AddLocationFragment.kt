@@ -21,6 +21,10 @@ import kotlinx.coroutines.launch
 import me.everything.android.ui.overscroll.OverScrollDecoratorHelper
 import javax.inject.Inject
 
+/**
+ * This fragment allows the user to remove a location
+ * and view list of location on the screen.
+ */
 class AddLocationFragment :
     BaseFragment<FragmentAddLocationBinding>(FragmentAddLocationBinding::inflate) {
 
@@ -32,40 +36,58 @@ class AddLocationFragment :
 
     override fun onViewCreate() {
 
+        lifecycleScope.launch() {
+            sharedViewModel.getLocationsList().onSuccess {
+                if (it.isEmpty()) {
+                    findNavController().navigate(R.id.nav_search_location)
+                    sharedViewModel.showLoading()
+                }
+            }
+        }
+
         // observe LiveData CurrentWeather
         subscribeData()
 
         // set menu
+        setUpMenu()
+
+        // setup recyclerView
+        setUpRecyclerView()
+
+        locationsAdapter.setOnItemClickListener { currentUi ->
+            sharedViewModel.setFavouriteLocationId(currentUi.id)
+
+            // navigate to Main fragment
+            findNavController().navigateUp()
+            sharedViewModel.showLoading()
+        }
+
+        // Hide soft keyboard
+        hideKeyboard(requireActivity())
+    }
+
+    private fun setUpMenu() {
+        // adding location menu
         val menuHost: MenuHost = requireActivity()
         menuHost.addMenuProvider(object : MenuProvider {
             override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
                 menuInflater.inflate(R.menu.add_location_fragment_menu, menu)
             }
 
+            // navigate to search fragment when location menu pressed
             override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
                 return when (menuItem.itemId) {
+
                     R.id.menu_add_location -> {
                         // navigate to SearchLocationFragment
                         findNavController().navigate(R.id.action_addLocationFragment_to_searchLocationFragment)
+                        sharedViewModel.showLoading()
                         true
                     }
                     else -> false
                 }
             }
         }, viewLifecycleOwner, Lifecycle.State.RESUMED)
-
-        // setup recyclerView
-        setUpRecyclerView()
-
-        locationsAdapter.setOnItemClickListener {
-            sharedViewModel.setFavouriteLocationId(it.id)
-
-            // navigate to Main fragment
-            findNavController().navigateUp()
-        }
-
-        // Hide soft keyboard
-        hideKeyboard(requireActivity())
     }
 
     private fun setUpRecyclerView() = binding.addLocationsLocationsRecyclerView.apply {
@@ -93,8 +115,20 @@ class AddLocationFragment :
                     sharedViewModel.setCurrentLocationAddedValue(false)
                 }
 
+                // if list of locations is empty navigates to searchLocationFragment
+
+                with(sharedViewModel) {
+                    if (locationsAdapter.currentList.size == 1) {
+                        clearLocationFromShare()
+                        setCurrentLocationAddedValue(false)
+                        setIsFirstTime(true)
+                        findNavController().navigate(R.id.nav_search_location)
+                        sharedViewModel.showLoading()
+                    }
+                }
                 // Delete Item
                 addLocationViewModel.deleteCurrent(itemToDelete.id)
+
             }
         }
 
@@ -102,21 +136,19 @@ class AddLocationFragment :
         itemTouchHelper.attachToRecyclerView(recyclerView)
     }
 
+    /**
+     * Subscribe to uiData
+     */
     private fun subscribeData() {
-        with(sharedViewModel) {
-            lifecycleScope.launch {
-                allLocations.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
-                    .collect { list ->
-                        hideProgressBar()
-                        if (list.isEmpty()) {
-                            sharedViewModel.clearLocationFromShare()
-                            sharedViewModel.setCurrentLocationAddedValue(false)
-                            sharedViewModel.setIsFirstTime(true)
-                            findNavController().navigate(R.id.nav_search_location)
-                        }
-                        locationsAdapter.submitList(list.sortedByDescending  { it.current_location })
-                    }
-            }
+        lifecycleScope.launch {
+            addLocationViewModel.uiState.flowWithLifecycle(lifecycle, Lifecycle.State.STARTED)
+                .collect { currentUiState ->
+                    locationsAdapter
+                        .submitList(currentUiState.listCurrent.sortedByDescending { currentUi ->
+                            currentUi.current_location
+                        })
+                    sharedViewModel.hideLoading()
+                }
         }
     }
 }
