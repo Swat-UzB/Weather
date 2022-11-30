@@ -1,0 +1,84 @@
+[33mcommit 4be0a5f0f2154bbbb51cffbb30eeaeb626905bea[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
+Merge: 20c5ad6 496503b
+Author: SwaT-UzB <uzbswat@gmail.com>
+Date:   Sun Nov 27 16:42:45 2022 +0500
+
+    Merge branch 'main' of https://github.com/Swat-UzB/Weather
+
+[33mcommit 20c5ad60898351f737cda8f4cb75781f76d8efc1[m
+Author: SwaT-UzB <uzbswat@gmail.com>
+Date:   Sun Nov 27 16:33:55 2022 +0500
+
+    databinding removed and localized
+
+[33mcommit 496503b085a65b09d5e2a1369735250bfd6bff94[m
+Author: Ilyosjon Zayniddinov <uzbswat@gmail.com>
+Date:   Sun Nov 27 15:33:31 2022 +0500
+
+    Update README.md
+
+[33mcommit 1dc40e2a7d36eef2356f920ead7f9a23f930bcdc[m
+Author: Ilyosjon Zayniddinov <uzbswat@gmail.com>
+Date:   Sun Nov 27 15:33:10 2022 +0500
+
+    Update README.md
+
+[33mcommit c756990465d2b93cb2faa4c4062386d69d48e7a6[m
+Author: Ilyosjon Zayniddinov <uzbswat@gmail.com>
+Date:   Sun Nov 27 15:32:42 2022 +0500
+
+    Update README.md
+
+[33mcommit 6fa3791c37397d6595cf88f6b36bcb6c86e4f693[m
+Author: Ilyosjon Zayniddinov <uzbswat@gmail.com>
+Date:   Sun Nov 27 15:32:02 2022 +0500
+
+    Update README.md
+
+[33mcommit fb7f89f2fa27943e7cb43f93e2da06f586dffc65[m
+Author: Ilyosjon Zayniddinov <uzbswat@gmail.com>
+Date:   Sun Nov 27 15:31:35 2022 +0500
+
+    Update README.md
+
+[33mcommit f20811b226782d8a929024939a7be2a3272a061b[m
+Author: Ilyosjon Zayniddinov <uzbswat@gmail.com>
+Date:   Sun Nov 27 15:30:48 2022 +0500
+
+    Create README.md
+
+[33mcommit 0ff1b4f40037c3d0067fe92d985705bfbe0be264[m
+Author: SwaT-UzB <uzbswat@gmail.com>
+Date:   Wed Oct 19 20:49:46 2022 +0500
+
+    final
+
+[33mcommit 86af23c2d2edbd9ca92a52cead73f1ade353b8a1[m
+Author: SwaT-UzB <uzbswat@gmail.com>
+Date:   Tue Sep 13 03:27:20 2022 +0500
+
+    clear git cache
+
+[33mcommit c02c4ec9802145e5d4c8063fbbaf32180d212d89[m
+Author: SwaT-UzB <uzbswat@gmail.com>
+Date:   Tue Sep 13 03:11:58 2022 +0500
+
+     workmanager added
+
+[33mcommit c9ea30a31c3578a03198cad5130ff011b3a56cf6[m
+Author: SwaT-UzB <uzbswat@gmail.com>
+Date:   Sun Jun 26 23:07:41 2022 +0500
+
+    commit
+
+[33mcommit a7bb4b5d8b6a04c4823a1ac569bd9cb97c1f9bda[m
+Author: SwaT-UzB <uzbswat@gmail.com>
+Date:   Sun Jun 26 22:56:27 2022 +0500
+
+    commit
+
+[33mcommit b61189d5d944a7ed7f687b96afab9396ec47fa94[m
+Author: SwaT-UzB <uzbswat@gmail.com>
+Date:   Sun Jun 26 22:53:59 2022 +0500
+
+    first commit

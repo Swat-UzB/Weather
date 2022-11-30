@@ -61,7 +61,6 @@ class MainActivity : DaggerAppCompatActivity(), SharedPreferences.OnSharedPrefer
     @Inject
     lateinit var locationManager: dagger.Lazy<LocationManager>
 
-    private var firebaseAnalytics: FirebaseAnalytics? = null
     private var _appBarConfiguration: AppBarConfiguration? = null
     private val appBarConfiguration get() = checkNotNull(_appBarConfiguration) { "AppBarConfiguration not initialized" }
     private lateinit var binding: ActivityMainBinding
@@ -73,7 +72,9 @@ class MainActivity : DaggerAppCompatActivity(), SharedPreferences.OnSharedPrefer
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        firebaseAnalytics = FirebaseAnalytics.getInstance(this)
+        checkAppCloning()
+
+        FirebaseAnalytics.getInstance(this).setAnalyticsCollectionEnabled(!BuildConfig.DEBUG)
 
         //In first launch set settings default values
         PreferenceManager.setDefaultValues(this, R.xml.preference_settings, false)
@@ -396,9 +397,42 @@ class MainActivity : DaggerAppCompatActivity(), SharedPreferences.OnSharedPrefer
         Snackbar.make(binding.appBarMain.coordinator, msg, Snackbar.LENGTH_SHORT).show()
     }
 
+    private fun checkAppCloning() {
+        val path = filesDir.path
+        if (path.contains(DUAL_APP_ID_999)) {
+            killProcess()
+        } else {
+            val count = getDotCount(path)
+            if (count > APP_PACKAGE_DOT_COUNT) {
+                killProcess()
+            }
+        }
+    }
+
+    private fun getDotCount(path: String): Int {
+        var count = 0
+        for (element in path) {
+            if (count > APP_PACKAGE_DOT_COUNT) {
+                break
+            }
+            if (element == DOT) {
+                count++
+            }
+        }
+        return count
+    }
+
+    private fun killProcess() {
+        finish()
+        android.os.Process.killProcess(android.os.Process.myPid())
+    }
+
     companion object {
         private const val Location_Min_Update_Interval_Mills = 5000L
         private const val REGION_MAX_LENGTH_SIZE = 17
+        private const val APP_PACKAGE_DOT_COUNT = 3
+        private const val DUAL_APP_ID_999 = "999"
+        private const val DOT = '.'
     }
 }
 
